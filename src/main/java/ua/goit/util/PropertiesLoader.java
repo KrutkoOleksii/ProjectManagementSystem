@@ -1,4 +1,4 @@
-package jdbc.util;
+package ua.goit.util;
 
 import java.io.IOException;
 import java.io.InputStream;

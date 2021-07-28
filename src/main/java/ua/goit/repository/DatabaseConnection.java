@@ -1,6 +1,7 @@
-package jdbc.util;
+package ua.goit.repository;
 
 import lombok.SneakyThrows;
+import ua.goit.util.PropertiesLoader;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -22,7 +23,6 @@ public class DatabaseConnection implements Closeable {
     private DatabaseConnection() {
         Class.forName(JDBC_DRIVER);
         //Class.forName("com.mysql.cj.jdbc.Driver");
-
         this.connection = DriverManager. getConnection(URL, USERNAME, PASSWORD);
     }
 
@@ -42,6 +42,6 @@ public class DatabaseConnection implements Closeable {
 
     @Override
     public void close() throws IOException {
-
+        //databaseConnection.close();
     }
 }

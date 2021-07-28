@@ -1,6 +1,6 @@
-package jdbc.repository;
+package ua.goit.repository;
 
-import jdbc.model.BaseEntity;
+import ua.goit.model.BaseEntity;
 
 import java.util.Collection;
 import java.util.List;
