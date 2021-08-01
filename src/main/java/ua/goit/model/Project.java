@@ -24,6 +24,6 @@ public class Project implements Serializable, BaseEntity<Integer>{
     Integer id;
     String project_name;
     Integer cost;
-    Integer company_id;
-    Integer customer_id;
+    Company company_id;
+    Customer customer_id;
 }

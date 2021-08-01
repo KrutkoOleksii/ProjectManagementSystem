@@ -28,5 +28,5 @@ public class Developer implements Serializable, BaseEntity<Integer>{
     @Column(length = 6)
     String sex;
     Integer salary;
-    Integer company_id;
+    Company company_id;
 }

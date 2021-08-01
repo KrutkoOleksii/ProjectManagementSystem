@@ -14,7 +14,7 @@ public interface BaseRepository <ID, E extends BaseEntity<ID>> {
 
     public void deleteAll();
 
-    public E save(E e);
+    public void save(E e);
 
     public Optional<E> findById(ID id);
 

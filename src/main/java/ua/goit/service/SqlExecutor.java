@@ -2,6 +2,7 @@ package ua.goit.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import ua.goit.model.Company;
 import ua.goit.model.Developer;
 import ua.goit.repository.DatabaseConnection;
 
@@ -16,6 +17,17 @@ import java.util.Map;
 
 public class SqlExecutor {
     public static void main(String[] args) throws Exception {
+        String table_ = "hw2.developers";
+        String fields = "developer_id,developer_name,age,sex,salary,company_id";
+
+        //позволяет выполнять CRUD (CREATE, READ, UPDATE, DELETE) операции;
+        // - CREATE
+//        String queryCreate = "INSERT INTO <table> (<fields>) VALUES (?,?,?,?,?,?)";
+//        String queryRead = "SELECT <fields> FROM <table>";
+//        String queryUpdate = "UPDATE <table> SET <fieldsAndValues> WHERE <condition>";
+//        String queryDelete = "DELETE FROM <table> WHERE <condition>";
+
+
         try(DatabaseConnection databaseConnection = DatabaseConnection.getInstance()){
             Connection connection = databaseConnection.getConnection();
             System.out.println(connection);
@@ -55,12 +67,18 @@ public class SqlExecutor {
                         .age(resultSet.getInt("age"))
                         .sex(resultSet.getString("sex"))
                         .salary(resultSet.getInt("salary"))
-                        .company_id(resultSet.getInt("company_id"))
+                        .company_id((Company) resultSet.getObject("company_id"))
                         .build();
                 developers.add(developer);
             }
             System.out.println(developers);
             statement.close();
         }
+    }
+
+    private String getFields(String table){
+        String fields = "";
+
+        return fields;
     }
 }
