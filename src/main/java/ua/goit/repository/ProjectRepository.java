@@ -68,8 +68,7 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
             preparedStatement.setInt(3,project.getCost());
             preparedStatement.setInt(4,project.getCompany_id().getId());
             preparedStatement.setInt(5,project.getCustomer_id().getId());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
     }
 
@@ -91,6 +90,11 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
             return resultSet.getObject("project_id", Optional.class);
         };
         return Optional.empty();
+    }
+
+    @Override
+    public void update(Integer integer, Project project) {
+
     }
 
     @Override

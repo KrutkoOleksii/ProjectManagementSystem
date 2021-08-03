@@ -86,8 +86,7 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
             preparedStatement.setInt(3,developer.getAge());
             preparedStatement.setString(4, developer.getSex());
             preparedStatement.setInt(5,developer.getCompany_id().getId());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
     }
 
@@ -109,6 +108,11 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
             return resultSet.getObject("developer_id", Optional.class);
         };
         return Optional.empty();
+    }
+
+    @Override
+    public void update(Integer integer, Developer developer) {
+
     }
 
     @Override

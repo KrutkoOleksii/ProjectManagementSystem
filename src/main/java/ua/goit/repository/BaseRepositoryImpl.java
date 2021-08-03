@@ -32,9 +32,9 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
     public Collection<E> findAll(){
         List<E> entities = new ArrayList<>();
         Statement statement = connection.createStatement();
-//        String sql = "SELECT " + fields + " FROM " + table;
-//        ResultSet resultSet = statement.executeQuery(sql);
-//        while (resultSet.next()){
+        String sql = String.format("SELECT %s FROM %s",fields,table);
+        ResultSet resultSet = statement.executeQuery(sql);
+        while (resultSet.next()){
 //            E element = E.builder()
 //                    .id(resultSet.getInt("developer_id"))
 //                    .developer_name(resultSet.getString("developer_name"))
@@ -44,7 +44,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
 //                    .company_id(resultSet.getInt("company_id"))
 //                    .build();
 //            entities.add(element);
-//        }
+        }
         statement.close();
         return entities;
     }
@@ -62,17 +62,15 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
     public void save(E e) {
         if (e != null) {
             //String values = "10,Wanda,28,F,3100,3"; <<= example
-            String sql = "INSERT INTO "+table+" (" + fields + ") VALUES (?,?,?,?,?)";
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?)", table, fields);
 
 //            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-//
 //            preparedStatement.setInt(1,e.getId());
 //            preparedStatement.setString(2,);
 //            preparedStatement.setInt(3,developer.getAge());
 //            preparedStatement.setString(4, developer.getSex());
 //            preparedStatement.setInt(5,developer.getCompany_id().getId());
-//
-//            ResultSet resultSet = preparedStatement.executeQuery();
+//            preparedStatement.executeUpdate();
         }
     }
 
@@ -86,7 +84,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
     @Override
     @SneakyThrows
     public Optional<E> findById(ID id) {
-        String sql = "SELECT " + fields + " FROM " + table + " WHERE " + fieldId + " = " + id;
+        String sql = String.format("SELECT %s FROM %s WHERE %s = %s", fields, table, fieldId, id.toString());
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         if(resultSet.next()){
@@ -96,11 +94,16 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
     }
 
     @Override
+    public void update(ID id, E e) {
+
+    }
+
+    @Override
     @SneakyThrows
     public void deleteById(ID id) {
         if (id!=null) {
             Statement statement = connection.createStatement();
-            String sql = "DELETE FROM hw2.developers WHERE " + fieldId + "="+id;
+            String sql = String.format("DELETE FROM %s WHERE %s=%s", table, fieldId, id.toString());
             ResultSet resultSet = statement.executeQuery(sql);
         }
     }

@@ -57,14 +57,13 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
     @SneakyThrows
     public void save(Skill skill) {
         if (skill!=null) {
-            //String values = "10,OMEGA,12341234";
+            //String values = "20,React,Junior"; << example
             String sql = "INSERT INTO "+table+" (" + fields + ") VALUES (?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,skill.getId());
             preparedStatement.setString(2,skill.getSkill_name());
             preparedStatement.setString(3,skill.getSkill_level());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
     }
 
@@ -86,6 +85,11 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
             return resultSet.getObject("skill_id", Optional.class);
         };
         return Optional.empty();
+    }
+
+    @Override
+    public void update(Integer integer, Skill skill) {
+
     }
 
     @Override

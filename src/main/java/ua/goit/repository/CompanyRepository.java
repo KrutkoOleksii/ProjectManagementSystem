@@ -31,7 +31,7 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     public Collection<Company> findAll() {
         List<Company> companies = new ArrayList<>();
         Statement statement = connection.createStatement();
-        String sql = "SELECT " + fields + " FROM " + table;
+        String sql = String.format("SELECT %s FROM %s", fields, table);
         ResultSet resultSet = statement.executeQuery(sql);
         while (resultSet.next()){
             Company company = Company.builder()
@@ -57,14 +57,13 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     @SneakyThrows
     public void save(Company company) {
         if (company!=null) {
-            //String values = "10,OMEGA,12341234";
+            //String values = "10,OMEGA,12341234"; << example
             String sql = "INSERT INTO "+table+" (" + fields + ") VALUES (?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,company.getId());
             preparedStatement.setString(2,company.getCompany_name());
             preparedStatement.setString(3,company.getCompany_code());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
     }
 
@@ -79,13 +78,26 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     @Override
     @SneakyThrows
     public Optional<Company> findById(Integer id) {
-        String sql = "SELECT " + fields + " FROM " + table + " WHERE company_id = " + id;
+        String sql = String.format("SELECT %s FROM %s WHERE company_id = %s",fields,table,id);
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         if(resultSet.next()){
-            return resultSet.getObject("company_id", Optional.class);
+
+            //Company object = resultSet.getObject("company_id", Company.class);
+
+            int company_id = resultSet.getInt("company_id");
+            String company_name = resultSet.getString("company_name");
+            String company_code = resultSet.getString("company_code");
+            Company company = new Company(company_id, company_name, company_code);
+            Optional<Company> companyOptional = Optional.ofNullable(company);
+            return companyOptional;
         };
         return Optional.empty();
+    }
+
+    @Override
+    public void update(Integer id, Company company) {
+
     }
 
     @Override

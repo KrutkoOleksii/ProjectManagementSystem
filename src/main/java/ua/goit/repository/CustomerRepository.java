@@ -32,7 +32,7 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     public Collection<Customer> findAll() {
         List<Customer> customers = new ArrayList<>();
         Statement statement = connection.createStatement();
-        String sql = "SELECT " + fields + " FROM " + table;
+        String sql = String.join("","SELECT ",fields," FROM ",table);
         ResultSet resultSet = statement.executeQuery(sql);
         while (resultSet.next()){
             Customer customer = Customer.builder()
@@ -59,13 +59,12 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     public void save(Customer customer) {
         if (customer!=null) {
             //String values = "10,OMEGA,12341234";
-            String sql = "INSERT INTO "+table+" (" + fields + ") VALUES (?,?,?)";
+            String sql = String.join("","INSERT INTO ",table," (",fields,") VALUES (?,?,?)");
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,customer.getId());
             preparedStatement.setString(2,customer.getCustomer_name());
             preparedStatement.setString(3,customer.getCustomer_code());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
     }
 
@@ -80,7 +79,7 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     @Override
     @SneakyThrows
     public Optional<Customer> findById(Integer id) {
-        String sql = "SELECT " + fields + " FROM " + table + " WHERE customer_id = " + id;
+        String sql = String.join("","SELECT ",fields," FROM ",table," WHERE customer_id = ",id.toString());
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         if(resultSet.next()){
@@ -90,11 +89,16 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     }
 
     @Override
+    public void update(Integer integer, Customer customer) {
+
+    }
+
+    @Override
     @SneakyThrows
     public void deleteById(Integer id) {
         if (id!=null) {
             Statement statement = connection.createStatement();
-            String sql = "DELETE FROM " + table + " WHERE customer_id="+id;
+            String sql = String.join("","DELETE FROM ",table," WHERE customer_id=",id.toString());
             ResultSet resultSet = statement.executeQuery(sql);
         }
     }
