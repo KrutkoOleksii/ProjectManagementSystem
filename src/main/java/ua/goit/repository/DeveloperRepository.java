@@ -28,7 +28,7 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
     @SneakyThrows
     public List<Developer> saveAll(Iterable<Developer> itrbl) {
         List<Developer> devs = new ArrayList<>();
-        String sql = "INSERT INTO "+table+" (" + fields + ") VALUES (?,?,?,?,?)";
+        String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?)",table,fields);
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         for (Developer developer: itrbl) {
             //String.join("",sql, "(?,?,?,?,?)");
@@ -46,9 +46,8 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
     @Override
     @SneakyThrows
     public Collection findAll() {
-        //Connection connection = databaseConnection.getConnection();
         Statement statement = connection.createStatement();
-        String sql = "SELECT " + fields + " FROM " + table;
+        String sql = String.format("SELECT %s FROM %s",fields,table);
         ResultSet resultSet = statement.executeQuery(sql);
         List<Developer> developers = new ArrayList<>();
         while (resultSet.next()){
@@ -79,13 +78,14 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
     public void save(Developer developer) {
         if (developer!=null) {
             //String values = "10,Wanda,28,F,3100,3";
-            String sql = "INSERT INTO "+table+" (" + fields + ") VALUES (?,?,?,?,?)";
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?,?)",table,fields);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,developer.getId());
             preparedStatement.setString(2,developer.getDeveloper_name());
             preparedStatement.setInt(3,developer.getAge());
             preparedStatement.setString(4, developer.getSex());
-            preparedStatement.setInt(5,developer.getCompany_id().getId());
+            preparedStatement.setInt(5,developer.getSalary());
+            preparedStatement.setInt(6,developer.getCompany_id().getId());
             preparedStatement.executeUpdate();
         }
     }
@@ -101,11 +101,13 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
     @Override
     @SneakyThrows
     public Optional<Developer> findById(Integer id) {
-        String sql = "SELECT " + fields + " FROM " + table + " WHERE developer_id = " + id;
+        String sql = String.format("SELECT %s FROM %s WHERE developer_id = %s",fields,table,id);
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         if(resultSet.next()){
-            return resultSet.getObject("developer_id", Optional.class);
+            //return resultSet.getObject("developer_id", Optional.class);
+            Developer developer = resultSet.getObject("developer_id", Developer.class);
+            return Optional.ofNullable(developer);
         };
         return Optional.empty();
     }
@@ -120,7 +122,7 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
     public void deleteById(Integer id) {
         if (id!=null) {
             Statement statement = connection.createStatement();
-            String sql = "DELETE FROM hw2.developers WHERE developer_id="+id;
+            String sql = String.format("DELETE FROM %s WHERE developer_id = %s",table,id);
             ResultSet resultSet = statement.executeQuery(sql);
         }
     }

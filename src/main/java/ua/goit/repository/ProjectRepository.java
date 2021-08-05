@@ -2,6 +2,7 @@ package ua.goit.repository;
 
 import lombok.SneakyThrows;
 import ua.goit.model.Company;
+import ua.goit.model.Customer;
 import ua.goit.model.Project;
 
 import java.sql.Connection;
@@ -32,15 +33,15 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     public Collection<Project> findAll() {
         List<Project> projects = new ArrayList<>();
         Statement statement = connection.createStatement();
-        String sql = "SELECT " + fields + " FROM " + table;
+        String sql = String.format("SELECT %s FROM %s",fields,table);
         ResultSet resultSet = statement.executeQuery(sql);
         while (resultSet.next()){
             Project project = Project.builder()
                     .id(resultSet.getInt("project_id"))
                     .project_name(resultSet.getString("project_name"))
                     .cost(resultSet.getInt("cost"))
-                    //.company_id(resultSet.getString("company_id"))
-                    //.customer_id(resultSet.getString("customer_id"))
+                    .company_id((Company) resultSet.getObject("company_id"))
+                    .customer_id((Customer) resultSet.getObject("customer_id"))
                     .build();
             projects.add(project);
         }
@@ -61,7 +62,7 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     public void save(Project project) {
         if (project!=null) {
             //String values = "10,NewAccounting,12341234";
-            String sql = "INSERT INTO "+table+" (" + fields + ") VALUES (?,?,?,?,?)";
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?)",table,fields);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,project.getId());
             preparedStatement.setString(2,project.getProject_name());
@@ -83,7 +84,7 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     @Override
     @SneakyThrows
     public Optional<Project> findById(Integer id) {
-        String sql = "SELECT " + fields + " FROM " + table + " WHERE project_id = " + id;
+        String sql = String.format("SELECT %s FROM %s WHERE project_id = %s",fields,table,id);
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         if(resultSet.next()){
@@ -102,7 +103,7 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     public void deleteById(Integer id) {
         if (id!=null) {
             Statement statement = connection.createStatement();
-            String sql = "DELETE FROM " + table + " WHERE project_id=" + id;
+            String sql = String.format("DELETE FROM %s WHERE project_id = %s",table,id);
             ResultSet resultSet = statement.executeQuery(sql);
         }
     }

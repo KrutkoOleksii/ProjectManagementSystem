@@ -58,7 +58,7 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     public void save(Company company) {
         if (company!=null) {
             //String values = "10,OMEGA,12341234"; << example
-            String sql = "INSERT INTO "+table+" (" + fields + ") VALUES (?,?,?)";
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,company.getId());
             preparedStatement.setString(2,company.getCompany_name());
@@ -96,8 +96,15 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     }
 
     @Override
+    @SneakyThrows
     public void update(Integer id, Company company) {
-
+        Statement statement = connection.createStatement();
+        String fieldsAndValues = String.format("company_id=%s,company_name='%s',company_code='%s'",
+                id,
+                company.getCompany_name(),
+                company.getCompany_code());
+        String sql = String.format("UPDATE %s SET %s WHERE company_id = %s",table,fieldsAndValues,id);
+        statement.executeUpdate(sql);
     }
 
     @Override
@@ -106,7 +113,7 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
         if (id!=null) {
             Statement statement = connection.createStatement();
             String sql = "DELETE FROM " + table + " WHERE company_id=" + id;
-            ResultSet resultSet = statement.executeQuery(sql);
+            statement.executeUpdate(sql);
         }
     }
 

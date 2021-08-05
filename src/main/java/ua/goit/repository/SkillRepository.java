@@ -31,7 +31,7 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
     public Collection<Skill> findAll() {
         List<Skill> skills = new ArrayList<>();
         Statement statement = connection.createStatement();
-        String sql = "SELECT " + fields + " FROM " + table;
+        String sql = String.format("SELECT %s FROM %s",fields,table);
         ResultSet resultSet = statement.executeQuery(sql);
         while (resultSet.next()){
             Skill skill = Skill.builder()
@@ -58,7 +58,7 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
     public void save(Skill skill) {
         if (skill!=null) {
             //String values = "20,React,Junior"; << example
-            String sql = "INSERT INTO "+table+" (" + fields + ") VALUES (?,?,?)";
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,skill.getId());
             preparedStatement.setString(2,skill.getSkill_name());
@@ -78,7 +78,7 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
     @Override
     @SneakyThrows
     public Optional<Skill> findById(Integer id) {
-        String sql = "SELECT " + fields + " FROM " + table + " WHERE skill_id = " + id;
+        String sql = String.format("SELECT %s FROM %s WHERE skill_id = %s",fields,table,id);
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         if(resultSet.next()){
@@ -97,7 +97,7 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
     public void deleteById(Integer id) {
         if (id!=null) {
             Statement statement = connection.createStatement();
-            String sql = "DELETE FROM " + table + " WHERE skill_id=" + id;
+            String sql = String.format("DELETE FROM %s WHERE skill_id = %s",table,id);
             ResultSet resultSet = statement.executeQuery(sql);
         }
     }
