@@ -1,12 +1,8 @@
 package ua.goit.repository;
 
-import lombok.SneakyThrows;
 import ua.goit.model.Skill;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,48 +23,52 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
     }
 
     @Override
-    @SneakyThrows
     public Collection<Skill> findAll() {
-        List<Skill> skills = new ArrayList<>();
-        Statement statement = connection.createStatement();
         String sql = String.format("SELECT %s FROM %s",fields,table);
-        ResultSet resultSet = statement.executeQuery(sql);
-        while (resultSet.next()){
-            Skill skill = Skill.builder()
-                    .id(resultSet.getInt("skill_id"))
-                    .skill_name(resultSet.getString("skill_name"))
-                    .skill_level(resultSet.getString("skill_level"))
-                    .build();
-            skills.add(skill);
+        List<Skill> skills = new ArrayList<>();
+        try (Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                Skill skill = Skill.builder()
+                        .id(resultSet.getInt("skill_id"))
+                        .skill_name(resultSet.getString("skill_name"))
+                        .skill_level(resultSet.getString("skill_level"))
+                        .build();
+                skills.add(skill);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        statement.close();
         return skills;
     }
 
     @Override
-    @SneakyThrows
     public void deleteAll() {
-        Statement statement = connection.createStatement();
         String sql = "DELETE FROM " + table;
-        ResultSet resultSet = statement.executeQuery(sql);
-    }
-
-    @Override
-    @SneakyThrows
-    public void save(Skill skill) {
-        if (skill!=null) {
-            //String values = "20,React,Junior"; << example
-            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1,skill.getId());
-            preparedStatement.setString(2,skill.getSkill_name());
-            preparedStatement.setString(3,skill.getSkill_level());
-            preparedStatement.executeUpdate();
+        try (Statement statement = connection.createStatement();){
+            statement.executeUpdate(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
     @Override
-    @SneakyThrows
+    public void save(Skill skill) {
+        if (skill!=null) {
+            //String values = "20,React,Junior"; << example
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+                preparedStatement.setInt(1,skill.getId());
+                preparedStatement.setString(2,skill.getSkill_name());
+                preparedStatement.setString(3,skill.getSkill_level());
+                preparedStatement.executeUpdate();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public Skill getOne(Integer id) {
         return findById(id)
                 .map(e -> e)
@@ -76,29 +76,46 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
     }
 
     @Override
-    @SneakyThrows
     public Optional<Skill> findById(Integer id) {
         String sql = String.format("SELECT %s FROM %s WHERE skill_id = %s",fields,table,id);
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-        if(resultSet.next()){
-            return resultSet.getObject("skill_id", Optional.class);
-        };
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next()){
+                return Optional.of(new Skill(
+                        resultSet.getInt("skill_id"),
+                        resultSet.getString("skill_name"),
+                        resultSet.getString("skill_level")
+                ));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return Optional.empty();
     }
 
     @Override
-    public void update(Integer integer, Skill skill) {
-
+    public void update(Integer id, Skill skill) {
+        String fieldsAndValues = String.format("skill_id=%s,skill_name='%s',skill_level='%s'",
+                id,
+                skill.getSkill_name(),
+                skill.getSkill_level());
+        String sql = String.format("UPDATE %s SET %s WHERE skill_id = %s",table,fieldsAndValues,id);
+        try(Statement statement = connection.createStatement()){
+            statement.executeUpdate(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
-    @SneakyThrows
     public void deleteById(Integer id) {
         if (id!=null) {
-            Statement statement = connection.createStatement();
             String sql = String.format("DELETE FROM %s WHERE skill_id = %s",table,id);
-            ResultSet resultSet = statement.executeQuery(sql);
+            try(Statement statement = connection.createStatement();){
+                statement.executeUpdate(sql);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 
@@ -108,12 +125,16 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
     }
 
     @Override
-    @SneakyThrows
     public long count() {
-        Statement statement = connection.createStatement();
         String sql = "SELECT COUNT(*) FROM " + table;
-        ResultSet resultSet = statement.executeQuery(sql);
-        return resultSet.getInt("COUNT(*)");
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            return resultSet.getInt("COUNT(*)");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
     }
+
 }
 

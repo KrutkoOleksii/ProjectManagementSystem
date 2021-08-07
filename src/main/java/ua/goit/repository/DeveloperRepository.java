@@ -2,12 +2,9 @@ package ua.goit.repository;
 
 import ua.goit.model.Company;
 import ua.goit.model.Developer;
-import lombok.SneakyThrows;
+import ua.goit.service.EntityServiceImpl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,73 +22,79 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
     }
 
     @Override
-    @SneakyThrows
     public List<Developer> saveAll(Iterable<Developer> itrbl) {
-        List<Developer> devs = new ArrayList<>();
         String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?)",table,fields);
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        for (Developer developer: itrbl) {
-            //String.join("",sql, "(?,?,?,?,?)");
-            preparedStatement.setInt(1,developer.getId());
-            preparedStatement.setString(2,developer.getDeveloper_name());
-            preparedStatement.setInt(3,developer.getAge());
-            preparedStatement.setString(4, developer.getSex());
-            preparedStatement.setInt(5,developer.getCompany_id().getId());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            devs.add(developer);
-        }
-        return devs;
-    }
-
-    @Override
-    @SneakyThrows
-    public Collection findAll() {
-        Statement statement = connection.createStatement();
-        String sql = String.format("SELECT %s FROM %s",fields,table);
-        ResultSet resultSet = statement.executeQuery(sql);
         List<Developer> developers = new ArrayList<>();
-        while (resultSet.next()){
-            Developer developer = Developer.builder()
-                    .id(resultSet.getInt("developer_id"))
-                    .developer_name(resultSet.getString("developer_name"))
-                    .age(resultSet.getInt("age"))
-                    .sex(resultSet.getString("sex"))
-                    .salary(resultSet.getInt("salary"))
-                    .company_id((Company) resultSet.getObject("company_id"))
-                    .build();
-            developers.add(developer);
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            for (Developer developer: itrbl) {
+                //String.join("",sql, "(?,?,?,?,?)");
+                preparedStatement.setInt(1,developer.getId());
+                preparedStatement.setString(2,developer.getDeveloper_name());
+                preparedStatement.setInt(3,developer.getAge());
+                preparedStatement.setString(4, developer.getSex());
+                preparedStatement.setInt(5,developer.getCompany_id().getId());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                developers.add(developer);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        statement.close();
         return developers;
     }
 
     @Override
-    @SneakyThrows
-    public void deleteAll() {
-        Statement statement = connection.createStatement();
-        String sql = "DELETE FROM " + table;
-        ResultSet resultSet = statement.executeQuery(sql);
+    public Collection findAll() {
+        String sql = String.format("SELECT %s FROM %s",fields,table);
+        List<Developer> developers = new ArrayList<>();
+        try(Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                Developer developer = Developer.builder()
+                        .id(resultSet.getInt("developer_id"))
+                        .developer_name(resultSet.getString("developer_name"))
+                        .age(resultSet.getInt("age"))
+                        .sex(resultSet.getString("sex"))
+                        .salary(resultSet.getInt("salary"))
+                        .company_id((Company) resultSet.getObject("company_id"))
+                        .build();
+                developers.add(developer);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return developers;
     }
 
     @Override
-    @SneakyThrows
-    public void save(Developer developer) {
-        if (developer!=null) {
-            //String values = "10,Wanda,28,F,3100,3";
-            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?,?)",table,fields);
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1,developer.getId());
-            preparedStatement.setString(2,developer.getDeveloper_name());
-            preparedStatement.setInt(3,developer.getAge());
-            preparedStatement.setString(4, developer.getSex());
-            preparedStatement.setInt(5,developer.getSalary());
-            preparedStatement.setInt(6,developer.getCompany_id().getId());
-            preparedStatement.executeUpdate();
+    public void deleteAll() {
+        String sql = "DELETE FROM " + table;
+        try(Statement statement = connection.createStatement()){
+            statement.executeUpdate(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
     @Override
-    @SneakyThrows
+    public void save(Developer developer) {
+        if (developer!=null) {
+            //String values = "10,Wanda,28,F,3100,3";
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?,?)",table,fields);
+            try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+                preparedStatement.setInt(1,developer.getId());
+                preparedStatement.setString(2,developer.getDeveloper_name());
+                preparedStatement.setInt(3,developer.getAge());
+                preparedStatement.setString(4, developer.getSex());
+                preparedStatement.setInt(5,developer.getSalary());
+                preparedStatement.setInt(6,developer.getCompany_id().getId());
+                preparedStatement.executeUpdate();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public Developer getOne(Integer id) {
         return findById(id)
                 .map(e -> e)
@@ -99,41 +102,65 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
     }
 
     @Override
-    @SneakyThrows
     public Optional<Developer> findById(Integer id) {
         String sql = String.format("SELECT %s FROM %s WHERE developer_id = %s",fields,table,id);
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-        if(resultSet.next()){
-            //return resultSet.getObject("developer_id", Optional.class);
-            Developer developer = resultSet.getObject("developer_id", Developer.class);
-            return Optional.ofNullable(developer);
-        };
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next()){
+                return Optional.of(new Developer(
+                        resultSet.getInt("developer_id"),
+                        resultSet.getString("developer_name"),
+                        resultSet.getInt("age"),
+                        resultSet.getString("sex"),
+                        resultSet.getInt("salary"),
+                        (new EntityServiceImpl<>(new CompanyRepository())).read(resultSet.getInt("company_id"))
+                ));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return Optional.empty();
     }
 
     @Override
-    public void update(Integer integer, Developer developer) {
-
-    }
-
-    @Override
-    @SneakyThrows
-    public void deleteById(Integer id) {
-        if (id!=null) {
-            Statement statement = connection.createStatement();
-            String sql = String.format("DELETE FROM %s WHERE developer_id = %s",table,id);
-            ResultSet resultSet = statement.executeQuery(sql);
+    public void update(Integer id, Developer developer) {
+        String fieldsAndValues = String.format("developer_id=%s,developer_name='%s',age=%s,sex='%s',salary=%s,company_id=%s",
+                id,
+                developer.getDeveloper_name(),
+                developer.getAge(),
+                developer.getSex(),
+                developer.getSalary(),
+                developer.getCompany_id().getId());
+        String sql = String.format("UPDATE %s SET %s WHERE developer_id = %s",table,fieldsAndValues,id);
+        try(Statement statement = connection.createStatement()){
+            statement.executeUpdate(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
     @Override
-    @SneakyThrows
+    public void deleteById(Integer id) {
+        if (id!=null) {
+            String sql = String.format("DELETE FROM %s WHERE developer_id = %s",table,id);
+            try(Statement statement = connection.createStatement()){
+                statement.executeUpdate(sql);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public long count() {
-        Statement statement = connection.createStatement();
         String sql = "SELECT COUNT(*) FROM " + table;
-        ResultSet resultSet = statement.executeQuery(sql);
-        return resultSet.getInt("COUNT(*)");
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            return resultSet.getInt("COUNT(*)");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
     }
 
     @Override

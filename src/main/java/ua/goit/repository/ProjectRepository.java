@@ -1,14 +1,11 @@
 package ua.goit.repository;
 
-import lombok.SneakyThrows;
 import ua.goit.model.Company;
 import ua.goit.model.Customer;
 import ua.goit.model.Project;
+import ua.goit.service.EntityServiceImpl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,52 +26,56 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     }
 
     @Override
-    @SneakyThrows
     public Collection<Project> findAll() {
-        List<Project> projects = new ArrayList<>();
-        Statement statement = connection.createStatement();
         String sql = String.format("SELECT %s FROM %s",fields,table);
-        ResultSet resultSet = statement.executeQuery(sql);
-        while (resultSet.next()){
-            Project project = Project.builder()
-                    .id(resultSet.getInt("project_id"))
-                    .project_name(resultSet.getString("project_name"))
-                    .cost(resultSet.getInt("cost"))
-                    .company_id((Company) resultSet.getObject("company_id"))
-                    .customer_id((Customer) resultSet.getObject("customer_id"))
-                    .build();
-            projects.add(project);
+        List<Project> projects = new ArrayList<>();
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                Project project = Project.builder()
+                        .id(resultSet.getInt("project_id"))
+                        .project_name(resultSet.getString("project_name"))
+                        .cost(resultSet.getInt("cost"))
+                        .company_id((Company) resultSet.getObject("company_id"))
+                        .customer_id((Customer) resultSet.getObject("customer_id"))
+                        .build();
+                projects.add(project);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        statement.close();
         return projects;
     }
 
     @Override
-    @SneakyThrows
     public void deleteAll() {
-        Statement statement = connection.createStatement();
         String sql = "DELETE FROM " + table;
-        ResultSet resultSet = statement.executeQuery(sql);
-    }
-
-    @Override
-    @SneakyThrows
-    public void save(Project project) {
-        if (project!=null) {
-            //String values = "10,NewAccounting,12341234";
-            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?)",table,fields);
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1,project.getId());
-            preparedStatement.setString(2,project.getProject_name());
-            preparedStatement.setInt(3,project.getCost());
-            preparedStatement.setInt(4,project.getCompany_id().getId());
-            preparedStatement.setInt(5,project.getCustomer_id().getId());
-            preparedStatement.executeUpdate();
+        try(Statement statement = connection.createStatement()){
+            statement.executeUpdate(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
     @Override
-    @SneakyThrows
+    public void save(Project project) {
+        if (project!=null) {
+            //String values = "10,NewAccounting,12341234";
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?)",table,fields);
+            try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+                preparedStatement.setInt(1,project.getId());
+                preparedStatement.setString(2,project.getProject_name());
+                preparedStatement.setInt(3,project.getCost());
+                preparedStatement.setInt(4,project.getCompany_id().getId());
+                preparedStatement.setInt(5,project.getCustomer_id().getId());
+                preparedStatement.executeUpdate();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public Project getOne(Integer id) {
         return findById(id)
                 .map(e -> e)
@@ -82,29 +83,50 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     }
 
     @Override
-    @SneakyThrows
     public Optional<Project> findById(Integer id) {
         String sql = String.format("SELECT %s FROM %s WHERE project_id = %s",fields,table,id);
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-        if(resultSet.next()){
-            return resultSet.getObject("project_id", Optional.class);
-        };
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next()){
+                return Optional.of(new Project(
+                        resultSet.getInt("project_id"),
+                        resultSet.getString("project_name"),
+                        resultSet.getInt("cost"),
+                        (new EntityServiceImpl<>(new CompanyRepository())).read(resultSet.getInt("company_id")),
+                        (new EntityServiceImpl<>(new CustomerRepository())).read(resultSet.getInt("customer_id"))
+                ));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return Optional.empty();
     }
 
     @Override
-    public void update(Integer integer, Project project) {
-
+    public void update(Integer id, Project project) {
+        String fieldsAndValues = String.format("project_id=%s,project_name='%s',cost=%s,company_id=%s,customer_id=%s",
+                id,
+                project.getProject_name(),
+                project.getCost(),
+                project.getCompany_id().getId(),
+                project.getCustomer_id().getId());
+        String sql = String.format("UPDATE %s SET %s WHERE project_id=%s",table,fieldsAndValues,id);
+        try(Statement statement = connection.createStatement()){
+            statement.executeUpdate(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
-    @SneakyThrows
     public void deleteById(Integer id) {
         if (id!=null) {
-            Statement statement = connection.createStatement();
-            String sql = String.format("DELETE FROM %s WHERE project_id = %s",table,id);
-            ResultSet resultSet = statement.executeQuery(sql);
+            String sql = String.format("DELETE FROM %s WHERE project_id=%s",table,id);
+            try(Statement statement = connection.createStatement()){
+                statement.executeUpdate(sql);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 
@@ -114,12 +136,15 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     }
 
     @Override
-    @SneakyThrows
     public long count() {
-        Statement statement = connection.createStatement();
         String sql = "SELECT COUNT(*) FROM " + table;
-        ResultSet resultSet = statement.executeQuery(sql);
-        return resultSet.getInt("COUNT(*)");
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            return resultSet.getInt("COUNT(*)");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
     }
 }
 

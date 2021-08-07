@@ -1,12 +1,8 @@
 package ua.goit.repository;
 
-import lombok.SneakyThrows;
 import ua.goit.model.Company;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,48 +23,52 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     }
 
     @Override
-    @SneakyThrows
     public Collection<Company> findAll() {
-        List<Company> companies = new ArrayList<>();
-        Statement statement = connection.createStatement();
         String sql = String.format("SELECT %s FROM %s", fields, table);
-        ResultSet resultSet = statement.executeQuery(sql);
-        while (resultSet.next()){
-            Company company = Company.builder()
-                    .id(resultSet.getInt("company_id"))
-                    .company_name(resultSet.getString("company_name"))
-                    .company_code(resultSet.getString("company_code"))
-                    .build();
-            companies.add(company);
+        List<Company> companies = new ArrayList<>();
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                Company company = Company.builder()
+                        .id(resultSet.getInt("company_id"))
+                        .company_name(resultSet.getString("company_name"))
+                        .company_code(resultSet.getString("company_code"))
+                        .build();
+                companies.add(company);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        statement.close();
         return companies;
     }
 
     @Override
-    @SneakyThrows
     public void deleteAll() {
-        Statement statement = connection.createStatement();
         String sql = "DELETE FROM " + table;
-        ResultSet resultSet = statement.executeQuery(sql);
-    }
-
-    @Override
-    @SneakyThrows
-    public void save(Company company) {
-        if (company!=null) {
-            //String values = "10,OMEGA,12341234"; << example
-            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1,company.getId());
-            preparedStatement.setString(2,company.getCompany_name());
-            preparedStatement.setString(3,company.getCompany_code());
-            preparedStatement.executeUpdate();
+        try(Statement statement = connection.createStatement()){
+            statement.executeUpdate(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
     @Override
-    @SneakyThrows
+    public void save(Company company) {
+        if (company!=null) {
+            //String values = "10,OMEGA,12341234"; << example
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
+            try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+                preparedStatement.setInt(1,company.getId());
+                preparedStatement.setString(2,company.getCompany_name());
+                preparedStatement.setString(3,company.getCompany_code());
+                preparedStatement.executeUpdate();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public Company getOne(Integer id) {
         return findById(id)
                 .map(e -> e)
@@ -76,44 +76,46 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     }
 
     @Override
-    @SneakyThrows
     public Optional<Company> findById(Integer id) {
         String sql = String.format("SELECT %s FROM %s WHERE company_id = %s",fields,table,id);
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-        if(resultSet.next()){
-
-            //Company object = resultSet.getObject("company_id", Company.class);
-
-            int company_id = resultSet.getInt("company_id");
-            String company_name = resultSet.getString("company_name");
-            String company_code = resultSet.getString("company_code");
-            Company company = new Company(company_id, company_name, company_code);
-            Optional<Company> companyOptional = Optional.ofNullable(company);
-            return companyOptional;
-        };
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next()){
+                return Optional.of(new Company(
+                        resultSet.getInt("company_id"),
+                        resultSet.getString("company_name"),
+                        resultSet.getString("company_code")
+                ));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return Optional.empty();
     }
 
     @Override
-    @SneakyThrows
     public void update(Integer id, Company company) {
-        Statement statement = connection.createStatement();
         String fieldsAndValues = String.format("company_id=%s,company_name='%s',company_code='%s'",
                 id,
                 company.getCompany_name(),
                 company.getCompany_code());
         String sql = String.format("UPDATE %s SET %s WHERE company_id = %s",table,fieldsAndValues,id);
-        statement.executeUpdate(sql);
+        try(Statement statement = connection.createStatement()){
+            statement.executeUpdate(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
-    @SneakyThrows
     public void deleteById(Integer id) {
         if (id!=null) {
-            Statement statement = connection.createStatement();
             String sql = "DELETE FROM " + table + " WHERE company_id=" + id;
-            statement.executeUpdate(sql);
+            try(Statement statement = connection.createStatement()){
+                statement.executeUpdate(sql);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 
@@ -123,11 +125,14 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     }
 
     @Override
-    @SneakyThrows
     public long count() {
-        Statement statement = connection.createStatement();
         String sql = "SELECT COUNT(*) FROM " + table;
-        ResultSet resultSet = statement.executeQuery(sql);
-        return resultSet.getInt("COUNT(*)");
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            return resultSet.getInt("COUNT(*)");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
     }
 }

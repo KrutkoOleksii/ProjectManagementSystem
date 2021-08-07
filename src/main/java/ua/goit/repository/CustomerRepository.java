@@ -1,12 +1,8 @@
 package ua.goit.repository;
 
-import lombok.SneakyThrows;
 import ua.goit.model.Customer;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,54 +18,57 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     }
 
     @Override
-    @SneakyThrows
     public List<Customer> saveAll(Iterable<Customer> itrbl) {
         return null;
     }
 
     @Override
-    @SneakyThrows
     public Collection<Customer> findAll() {
-        List<Customer> customers = new ArrayList<>();
-        Statement statement = connection.createStatement();
         String sql = String.format("SELECT %s FROM %s",fields,table);
-        ResultSet resultSet = statement.executeQuery(sql);
-        while (resultSet.next()){
-            Customer customer = Customer.builder()
-                    .id(resultSet.getInt("customer_id"))
-                    .customer_name(resultSet.getString("customer_name"))
-                    .customer_code(resultSet.getString("customer_code"))
-                    .build();
-            customers.add(customer);
+        List<Customer> customers = new ArrayList<>();
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                Customer customer = Customer.builder()
+                        .id(resultSet.getInt("customer_id"))
+                        .customer_name(resultSet.getString("customer_name"))
+                        .customer_code(resultSet.getString("customer_code"))
+                        .build();
+                customers.add(customer);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        statement.close();
         return customers;
     }
 
     @Override
-    @SneakyThrows
     public void deleteAll() {
-        Statement statement = connection.createStatement();
         String sql = "DELETE FROM " + table;
-        ResultSet resultSet = statement.executeQuery(sql);
-    }
-
-    @Override
-    @SneakyThrows
-    public void save(Customer customer) {
-        if (customer!=null) {
-            //String values = "10,OMEGA,12341234";
-            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1,customer.getId());
-            preparedStatement.setString(2,customer.getCustomer_name());
-            preparedStatement.setString(3,customer.getCustomer_code());
-            preparedStatement.executeUpdate();
+        try(Statement statement = connection.createStatement()){
+            statement.executeUpdate(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
     @Override
-    @SneakyThrows
+    public void save(Customer customer) {
+        if (customer!=null) {
+            //String values = "10,OMEGA,12341234";
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
+            try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+                preparedStatement.setInt(1,customer.getId());
+                preparedStatement.setString(2,customer.getCustomer_name());
+                preparedStatement.setString(3,customer.getCustomer_code());
+                preparedStatement.executeUpdate();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public Customer getOne(Integer id) {
         return findById(id)
                 .map(e -> e)
@@ -77,29 +76,46 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     }
 
     @Override
-    @SneakyThrows
     public Optional<Customer> findById(Integer id) {
         String sql = String.format("SELECT %s FROM %s WHERE customer_id = %s",fields,table,id.toString());
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-        if(resultSet.next()){
-            return resultSet.getObject("customer_id", Optional.class);
-        };
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next()){
+                return Optional.of(new Customer(
+                        resultSet.getInt("customer_id"),
+                        resultSet.getString("customer_name"),
+                        resultSet.getString("customer_code")
+                ));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return Optional.empty();
     }
 
     @Override
-    public void update(Integer integer, Customer customer) {
-
+    public void update(Integer id, Customer customer) {
+        String fieldsAndValues = String.format("customer_id=%s,customer_name='%s',customer_code='%s'",
+                id,
+                customer.getCustomer_name(),
+                customer.getCustomer_code());
+        String sql = String.format("UPDATE %s SET %s WHERE customer_id = %s",table,fieldsAndValues,id);
+        try(Statement statement = connection.createStatement()){
+            statement.executeUpdate(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
-    @SneakyThrows
     public void deleteById(Integer id) {
         if (id!=null) {
-            Statement statement = connection.createStatement();
             String sql = String.format("DELETE FROM %s WHERE customer_id=%s",table,id.toString());
-            ResultSet resultSet = statement.executeQuery(sql);
+            try(Statement statement = connection.createStatement()){
+                statement.executeUpdate(sql);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 
@@ -109,11 +125,14 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     }
 
     @Override
-    @SneakyThrows
     public long count() {
-        Statement statement = connection.createStatement();
         String sql = "SELECT COUNT(*) FROM " + table;
-        ResultSet resultSet = statement.executeQuery(sql);
-        return resultSet.getInt("COUNT(*)");
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            return resultSet.getInt("COUNT(*)");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
     }
 }

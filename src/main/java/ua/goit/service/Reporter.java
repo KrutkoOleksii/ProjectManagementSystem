@@ -1,11 +1,10 @@
 package ua.goit.service;
 
-import com.sun.source.tree.WhileLoopTree;
-import lombok.SneakyThrows;
 import ua.goit.repository.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Reporter {
@@ -15,75 +14,123 @@ public class Reporter {
         this.connection = DatabaseConnection.getInstance().getConnection();
     }
 
-    @SneakyThrows
-    public void printReport(Integer id) {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(salaryOfProject(id));
-        while (resultSet.next()){
-            System.out.println(resultSet.getString("project_name"));
-            System.out.println(resultSet.getString("salary"));
+    public void printReportSalaryOfProject(Integer id) {
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(salaryOfProject(id));
+            while (resultSet.next()){
+                System.out.println("Salary of project "+resultSet.getString("project_name"));
+                System.out.println(resultSet.getString("salary"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void printReportDevelopersOfProject(Integer id) {
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(developersOfProject(id));
+            System.out.println("Developer of project with id = "+id);
+            while (resultSet.next()){
+                System.out.println(resultSet.getString("developer_name"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void printReportDevelopersJava(String skill) {
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(developersJava(skill));
+            System.out.println("*** Skill - "+skill);
+            while (resultSet.next()){
+                System.out.println(resultSet.getString("developer_name"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void printReportDevelopersMiddle(String level) {
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(developersJava(level));
+            System.out.println("*** Level - "+level);
+            while (resultSet.next()){
+                System.out.println(resultSet.getString("developer_name"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void printReportProjectList() {
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(projectList());
+            System.out.println("All projects:");
+            while (resultSet.next()){
+                System.out.println(resultSet.getString("project_name"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
     private String salaryOfProject(Integer id) {
         //     * зарплату(сумму) всех разработчиков отдельного проекта
-        return  "SELECT project_name, sum(salary) as salary " +
+        return  String.format("SELECT project_name, sum(salary) as salary " +
                 " FROM hw2.developers " +
                 " INNER JOIN hw2.developer_project " +
                 " ON developer_project.developer_id = developers.developer_id " +
                 " INNER JOIN hw2.projects " +
                 " ON developer_project.project_id = projects.project_id " +
-                " WHERE projects.project_id = " + id +
-                " GROUP BY project_name";
+                " WHERE projects.project_id=%s" +
+                " GROUP BY project_name",id);
     }
 
     private String developersOfProject(Integer id) {
         //     * список разработчиков отдельного проекта
-        return "SELECT" +
+        return String.format("SELECT" +
                 " developer_name" +
-                " FROM developers" +
-                " INNER JOIN developer_project" +
+                " FROM hw2.developers" +
+                " INNER JOIN hw2.developer_project" +
                 " ON developer_project.developer_id = developers.developer_id" +
-                " INNER JOIN projects" +
+                " INNER JOIN hw2.projects" +
                 " ON developer_project.project_id = projects.project_id" +
-                " WHERE projects.project_id = " + id;
+                " WHERE projects.project_id=%s",id);
     }
 
     private String developersJava(String skill) {
         //     * список всех Java разработчиков
-        return "SELECT" +
+        return String.format("SELECT" +
                 " developer_name" +
-                " FROM developers" +
-                " INNER JOIN developer_skill" +
+                " FROM hw2.developers" +
+                " INNER JOIN hw2.developer_skill" +
                 " ON developer_skill.developer_id = developers.developer_id" +
-                " INNER JOIN skills" +
+                " INNER JOIN hw2.skills" +
                 " ON developer_skill.skill_id = skills.skill_id" +
-                " WHERE skills.skill_name = " + skill; // if skill = 'Java'
+                " WHERE skills.skill_name='%s'",skill); // if skill = 'Java'
     }
 
     private String developersMiddle(String level) {
         //     * список всех Middle разработчиков
-        return "SELECT" +
+        return String.format("SELECT" +
                 " developer_name" +
-                " FROM developers" +
-                " INNER JOIN developer_skill" +
+                " FROM hw2.developers" +
+                " INNER JOIN hw2.developer_skill" +
                 " ON developer_skill.developer_id = developers.developer_id" +
-                " INNER JOIN skills" +
+                " INNER JOIN hw2.skills" +
                 " ON developer_skill.skill_id = skills.skill_id" +
-                " WHERE skills.skill_level = " + level; // if level = 'Middle'
+                " WHERE skills.skill_level='%s'",level); // if level = 'Middle'
     }
 
-    // список проектов в следующем формате:
-    // дата создания - название проекта - количество разработчиков на этом проекте.
-
-    private String projectList(String level) {
-        //     * список всех Middle разработчиков
+    private String projectList() {
+        //     * список проектов в следующем формате:
+        //     дата создания - название проекта - количество разработчиков на этом проекте.
         return "SELECT" +
                 " project_name" +
-                " FROM developers" +
-                " INNER JOIN developer_project" +
+                " FROM hw2.developers" +
+                " INNER JOIN hw2.developer_project" +
                 " ON developer_project.developer_id = developers.developer_id" +
-                " INNER JOIN projects" +
+                " INNER JOIN hw2.projects" +
                 " ON developer_project.project_id = projects.project_id";
     }
 }
