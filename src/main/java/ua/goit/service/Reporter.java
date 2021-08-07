@@ -38,7 +38,7 @@ public class Reporter {
         }
     }
 
-    public void printReportDevelopersJava(String skill) {
+    public void printReportDevelopersBySkill(String skill) {
         try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(developersJava(skill));
             System.out.println("*** Skill - "+skill);
@@ -50,9 +50,9 @@ public class Reporter {
         }
     }
 
-    public void printReportDevelopersMiddle(String level) {
+    public void printReportDevelopersByLevel(String level) {
         try(Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(developersJava(level));
+            ResultSet resultSet = statement.executeQuery(developersMiddle(level));
             System.out.println("*** Level - "+level);
             while (resultSet.next()){
                 System.out.println(resultSet.getString("developer_name"));
@@ -107,7 +107,7 @@ public class Reporter {
                 " ON developer_skill.developer_id = developers.developer_id" +
                 " INNER JOIN hw2.skills" +
                 " ON developer_skill.skill_id = skills.skill_id" +
-                " WHERE skills.skill_name='%s'",skill); // if skill = 'Java'
+                " WHERE skills.skill_name='%s'",skill);
     }
 
     private String developersMiddle(String level) {
@@ -119,7 +119,7 @@ public class Reporter {
                 " ON developer_skill.developer_id = developers.developer_id" +
                 " INNER JOIN hw2.skills" +
                 " ON developer_skill.skill_id = skills.skill_id" +
-                " WHERE skills.skill_level='%s'",level); // if level = 'Middle'
+                " WHERE skills.skill_level='%s'",level);
     }
 
     private String projectList() {

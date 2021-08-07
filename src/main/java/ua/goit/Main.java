@@ -67,8 +67,8 @@ public class Main {
         Reporter reporter = new Reporter();
         reporter.printReportSalaryOfProject(5);
         reporter.printReportDevelopersOfProject(2);
-        reporter.printReportDevelopersJava("Java");
-        reporter.printReportDevelopersMiddle("Middle");
+        reporter.printReportDevelopersBySkill("Java");
+        reporter.printReportDevelopersByLevel("Middle");
         reporter.printReportProjectList();
     }
 
