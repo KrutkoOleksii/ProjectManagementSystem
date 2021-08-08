@@ -65,9 +65,13 @@ public class Reporter {
     public void printReportProjectList() {
         try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(projectList());
-            System.out.println("All projects:");
+            System.out.println("*** All projects: (startDate - projectName - countOfDevs)");
             while (resultSet.next()){
-                System.out.println(resultSet.getString("project_name"));
+                System.out.println(String.join(" - ",
+                        resultSet.getDate("start_date").toString(),
+                        resultSet.getString("project_name"),
+                        resultSet.getString("count_of_devs")
+                        ));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -126,11 +130,14 @@ public class Reporter {
         //     * список проектов в следующем формате:
         //     дата создания - название проекта - количество разработчиков на этом проекте.
         return "SELECT" +
-                " project_name" +
-                " FROM hw2.developers" +
+                " start_date," +
+                " project_name," +
+                " COUNT(developer_name) AS count_of_devs" +
+                " FROM hw2.projects" +
                 " INNER JOIN hw2.developer_project" +
+                " ON developer_project.project_id = projects.project_id" +
+                " INNER JOIN hw2.developers" +
                 " ON developer_project.developer_id = developers.developer_id" +
-                " INNER JOIN hw2.projects" +
-                " ON developer_project.project_id = projects.project_id";
+                " GROUP BY project_name,start_date";
     }
 }

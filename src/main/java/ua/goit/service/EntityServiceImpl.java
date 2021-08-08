@@ -5,7 +5,7 @@ import ua.goit.repository.BaseRepository;
 
 public class EntityServiceImpl<ID, E extends BaseEntity<ID>> implements EntityService<ID,E>{
 
-    private BaseRepository<ID, E> repository;
+    private final BaseRepository<ID, E> repository;
 
     public EntityServiceImpl(BaseRepository<ID, E> repository) {
         this.repository = repository;
