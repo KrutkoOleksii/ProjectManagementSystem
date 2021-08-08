@@ -26,4 +26,5 @@ public class Project implements Serializable, BaseEntity<Integer>{
     Integer cost;
     Company company_id;
     Customer customer_id;
+    String start_date;
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
 public class ProjectRepository implements BaseRepository<Integer, Project>{
     private final Connection connection;
     private final String table = "hw2.projects";
-    private final String fields = "project_id,project_name,cost,company_id,customer_id";
+    private final String fields = "project_id,project_name,cost,company_id,customer_id,start_date";
 
     public ProjectRepository() {
         this.connection = DatabaseConnection.getInstance().getConnection();
@@ -38,6 +38,7 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
                         .cost(resultSet.getInt("cost"))
                         .company_id((Company) resultSet.getObject("company_id"))
                         .customer_id((Customer) resultSet.getObject("customer_id"))
+                        .start_date(resultSet.getDate("start_date").toString())
                         .build();
                 projects.add(project);
             }
@@ -61,13 +62,14 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     public void save(Project project) {
         if (project!=null) {
             //String values = "10,NewAccounting,12341234";
-            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?)",table,fields);
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?,?)",table,fields);
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
                 preparedStatement.setInt(1,project.getId());
                 preparedStatement.setString(2,project.getProject_name());
                 preparedStatement.setInt(3,project.getCost());
                 preparedStatement.setInt(4,project.getCompany_id().getId());
                 preparedStatement.setInt(5,project.getCustomer_id().getId());
+                preparedStatement.setString(6,project.getStart_date());
                 preparedStatement.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -93,7 +95,8 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
                         resultSet.getString("project_name"),
                         resultSet.getInt("cost"),
                         (new EntityServiceImpl<>(new CompanyRepository())).read(resultSet.getInt("company_id")),
-                        (new EntityServiceImpl<>(new CustomerRepository())).read(resultSet.getInt("customer_id"))
+                        (new EntityServiceImpl<>(new CustomerRepository())).read(resultSet.getInt("customer_id")),
+                        resultSet.getString("start_date")
                 ));
             }
         } catch (SQLException throwables) {
@@ -104,12 +107,14 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
 
     @Override
     public void update(Integer id, Project project) {
-        String fieldsAndValues = String.format("project_id=%s,project_name='%s',cost=%s,company_id=%s,customer_id=%s",
+        String fieldsAndValues = String.format("project_id=%s,project_name='%s',cost=%s,company_id=%s,customer_id=%s,start_date='%s'",
                 id,
                 project.getProject_name(),
                 project.getCost(),
                 project.getCompany_id().getId(),
-                project.getCustomer_id().getId());
+                project.getCustomer_id().getId(),
+                project.getStart_date()
+                );
         String sql = String.format("UPDATE %s SET %s WHERE project_id=%s",table,fieldsAndValues,id);
         try(Statement statement = connection.createStatement()){
             statement.executeUpdate(sql);

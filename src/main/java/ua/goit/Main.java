@@ -1,16 +1,9 @@
 package ua.goit;
 
-import org.reflections.Reflections;
 import ua.goit.model.*;
 import ua.goit.repository.*;
 import ua.goit.service.EntityServiceImpl;
 import ua.goit.service.Reporter;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Set;
 
 public class Main {
 
@@ -46,12 +39,14 @@ public class Main {
         EntityServiceImpl<Integer,Project> projectService = new EntityServiceImpl<>(projectRepository);
         projectService.create(new Project(111,"MEGA PROJECT", 1_000_000,
                 companyService.read(2),
-                customerService.read(1)
+                customerService.read(1),
+                "2020-04-20"
         ));
         System.out.println(projectService.read(111));
         projectService.update(111, new Project(111,"MEGA PROJECT 2.0",1_200_000,
                 companyService.read(2),
-                customerService.read(1)
+                customerService.read(1),
+                "2020-04-20"
         ));
         System.out.println(projectService.read(111));
         projectService.delete(111);
@@ -65,25 +60,30 @@ public class Main {
         skillService.delete(11);
 
         Reporter reporter = new Reporter();
-        reporter.printReportSalaryOfProject(5);
+        reporter.printReportSalaryOfProject(4);
         reporter.printReportDevelopersOfProject(2);
         reporter.printReportDevelopersBySkill("Java");
         reporter.printReportDevelopersByLevel("Middle");
         reporter.printReportProjectList();
-    }
 
-    public void printModelsAndFields() {
-        Reflections reflections = new Reflections("ua.goit");
-        Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(Entity.class);
-        for (Class cl: typesAnnotatedWith){
-            System.out.println(cl.getName());
-            Field[] declaredFields = cl.getDeclaredFields();
-            for (Field f: declaredFields) {
-                System.out.println(" -- : " + f.getName());
-                Column[] annotationsByType = f.getAnnotationsByType(Column.class);
-                System.out.println(Arrays.toString(annotationsByType));
-            }
-            System.out.println(declaredFields.toString());
-        }
+        //создать заготовки операций(закомментированные query) для создания новых проектов, разработчиков, клиентов.
+        //! Не забывать о правильных связях между таблиц !
+
+        /*
+        projectService.create(new Project(20,"Solar", 1_500_000, companyService.read(3), customerService.read(3),"2020-09-01"));
+        projectService.create(new Project(21,"Integration", 800_000, companyService.read(1), customerService.read(2),"2020-01-15"));
+        projectService.create(new Project(22,"Trade 21", 650_000, companyService.read(2), customerService.read(1),"2021-07-21"));
+        */
+        /*
+        developerService.create(new Developer(20,"Piter",32,"M",2900, companyService.read(1)));
+        developerService.create(new Developer(21,"Dmitry",33,"M",4000, companyService.read(2)));
+        developerService.create(new Developer(22,"Anna",25,"F",2500, companyService.read(3)));
+        */
+
+        /*
+        companyService.create(new Company(20,"Katamaran","43243212"));
+        companyService.create(new Company(21,"Squalo","77446655"));
+        companyService.create(new Company(22,"Owoce i warzywa","19283746"));
+        * */
     }
 }
