@@ -81,9 +81,9 @@ public class Main {
         */
 
         /*
-        companyService.create(new Company(20,"Katamaran","43243212"));
-        companyService.create(new Company(21,"Squalo","77446655"));
-        companyService.create(new Company(22,"Owoce i warzywa","19283746"));
+        customerService.create(new Customer(20,"Katamaran","43243212"));
+        customerService.create(new Customer(21,"Squalo","77446655"));
+        customerService.create(new Customer(22,"Owoce i warzywa","19283746"));
         * */
     }
 }
