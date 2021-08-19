@@ -31,8 +31,8 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
                 preparedStatement.setInt(1,developer.getId());
                 preparedStatement.setString(2,developer.getDeveloper_name());
                 preparedStatement.setInt(3,developer.getAge());
-                preparedStatement.setString(4, developer.getSex());
-                preparedStatement.setInt(5,developer.getCompany_id().getId());
+                preparedStatement.setString(4, developer.getGender());
+                preparedStatement.setInt(5,developer.getCompanyId().getId());
                 ResultSet resultSet = preparedStatement.executeQuery();
                 developers.add(developer);
             }
@@ -53,9 +53,9 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
                         .id(resultSet.getInt("developer_id"))
                         .developer_name(resultSet.getString("developer_name"))
                         .age(resultSet.getInt("age"))
-                        .sex(resultSet.getString("sex"))
+                        .gender(resultSet.getString("sex"))
                         .salary(resultSet.getInt("salary"))
-                        .company_id((Company) resultSet.getObject("company_id"))
+                        .companyId((Company) resultSet.getObject("company_id"))
                         .build();
                 developers.add(developer);
             }
@@ -84,9 +84,9 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
                 preparedStatement.setInt(1,developer.getId());
                 preparedStatement.setString(2,developer.getDeveloper_name());
                 preparedStatement.setInt(3,developer.getAge());
-                preparedStatement.setString(4, developer.getSex());
+                preparedStatement.setString(4, developer.getGender());
                 preparedStatement.setInt(5,developer.getSalary());
-                preparedStatement.setInt(6,developer.getCompany_id().getId());
+                preparedStatement.setInt(6,developer.getCompanyId().getId());
                 preparedStatement.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -128,9 +128,9 @@ public class DeveloperRepository implements BaseRepository<Integer,Developer>{
                 id,
                 developer.getDeveloper_name(),
                 developer.getAge(),
-                developer.getSex(),
+                developer.getGender(),
                 developer.getSalary(),
-                developer.getCompany_id().getId());
+                developer.getCompanyId().getId());
         String sql = String.format("UPDATE %s SET %s WHERE developer_id = %s",table,fieldsAndValues,id);
         try(Statement statement = connection.createStatement()){
             statement.executeUpdate(sql);

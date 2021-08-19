@@ -22,9 +22,9 @@ public class Skill implements Serializable, BaseEntity<Integer>{
     @Id
     @Column(name = "skill_id")
     Integer id;
-    @Column(length = 45)
-    String skill_name;
-    @Column(length = 45)
-    String skill_level;
+    @Column(name = "skill_name",length = 45)
+    String name;
+    @Column(name = "skill_level",length = 45)
+    String skillLevel;
 }
 

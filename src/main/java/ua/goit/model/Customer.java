@@ -22,8 +22,8 @@ public class Customer implements Serializable, BaseEntity<Integer>{
     @Id
     @Column(name = "customer_id")
     Integer id;
-    @Column(length = 45)
-    String customer_name;
-    @Column(length = 10)
-    String customer_code;
+    @Column(name = "customer_name", length = 45)
+    String name;
+    @Column(name = "customer_code",length = 10)
+    String code;
 }

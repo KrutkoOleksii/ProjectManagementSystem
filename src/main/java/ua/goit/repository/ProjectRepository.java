@@ -34,11 +34,11 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
             while (resultSet.next()){
                 Project project = Project.builder()
                         .id(resultSet.getInt("project_id"))
-                        .project_name(resultSet.getString("project_name"))
+                        .name(resultSet.getString("project_name"))
                         .cost(resultSet.getInt("cost"))
-                        .company_id((Company) resultSet.getObject("company_id"))
-                        .customer_id((Customer) resultSet.getObject("customer_id"))
-                        .start_date(resultSet.getDate("start_date").toString())
+                        .companyId((Company) resultSet.getObject("company_id"))
+                        .customerId((Customer) resultSet.getObject("customer_id"))
+                        .startDate(resultSet.getDate("start_date").toString())
                         .build();
                 projects.add(project);
             }
@@ -65,11 +65,11 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?,?)",table,fields);
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
                 preparedStatement.setInt(1,project.getId());
-                preparedStatement.setString(2,project.getProject_name());
+                preparedStatement.setString(2,project.getName());
                 preparedStatement.setInt(3,project.getCost());
-                preparedStatement.setInt(4,project.getCompany_id().getId());
-                preparedStatement.setInt(5,project.getCustomer_id().getId());
-                preparedStatement.setString(6,project.getStart_date());
+                preparedStatement.setInt(4,project.getCompanyId().getId());
+                preparedStatement.setInt(5,project.getCustomerId().getId());
+                preparedStatement.setString(6,project.getStartDate());
                 preparedStatement.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -109,11 +109,11 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     public void update(Integer id, Project project) {
         String fieldsAndValues = String.format("project_id=%s,project_name='%s',cost=%s,company_id=%s,customer_id=%s,start_date='%s'",
                 id,
-                project.getProject_name(),
+                project.getName(),
                 project.getCost(),
-                project.getCompany_id().getId(),
-                project.getCustomer_id().getId(),
-                project.getStart_date()
+                project.getCompanyId().getId(),
+                project.getCustomerId().getId(),
+                project.getStartDate()
                 );
         String sql = String.format("UPDATE %s SET %s WHERE project_id=%s",table,fieldsAndValues,id);
         try(Statement statement = connection.createStatement()){

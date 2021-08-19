@@ -31,8 +31,8 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
             while (resultSet.next()){
                 Company company = Company.builder()
                         .id(resultSet.getInt("company_id"))
-                        .company_name(resultSet.getString("company_name"))
-                        .company_code(resultSet.getString("company_code"))
+                        .name(resultSet.getString("company_name"))
+                        .code(resultSet.getString("company_code"))
                         .build();
                 companies.add(company);
             }
@@ -59,8 +59,8 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
                 preparedStatement.setInt(1,company.getId());
-                preparedStatement.setString(2,company.getCompany_name());
-                preparedStatement.setString(3,company.getCompany_code());
+                preparedStatement.setString(2,company.getName());
+                preparedStatement.setString(3,company.getCode());
                 preparedStatement.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -81,11 +81,11 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
         try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(sql);
             if(resultSet.next()){
-                return Optional.of(new Company(
-                        resultSet.getInt("company_id"),
-                        resultSet.getString("company_name"),
-                        resultSet.getString("company_code")
-                ));
+                return Optional.of(Company.builder()
+                        .id(resultSet.getInt("company_id"))
+                        .name(resultSet.getString("company_name"))
+                        .code(resultSet.getString("company_code"))
+                        .build());
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -97,8 +97,8 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     public void update(Integer id, Company company) {
         String fieldsAndValues = String.format("company_id=%s,company_name='%s',company_code='%s'",
                 id,
-                company.getCompany_name(),
-                company.getCompany_code());
+                company.getName(),
+                company.getCode());
         String sql = String.format("UPDATE %s SET %s WHERE company_id = %s",table,fieldsAndValues,id);
         try(Statement statement = connection.createStatement()){
             statement.executeUpdate(sql);

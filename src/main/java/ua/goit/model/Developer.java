@@ -22,11 +22,14 @@ public class Developer implements Serializable, BaseEntity<Integer>{
     @Id
     @Column(name = "developer_id")
     Integer id;
-    @Column(length = 45)
+    @Column(name = "",length = 45)
     String developer_name;
+    @Column(name = "age")
     Integer age;
-    @Column(length = 6)
-    String sex;
+    @Column(name = "sex",length = 6)
+    String gender;
+    @Column(name = "salary")
     Integer salary;
-    Company company_id;
+    @Column(name = "company_id")
+    Company companyId;
 }

@@ -96,7 +96,7 @@ public class Main {
 
             } else if (response.contains("create|company")) {
                 String[] values = getArrayOfFields("{id},{name},{code}");
-                companyService.create(new Company(Integer.parseInt(values[0]),values[1],values[2]));
+                companyService.create(new Company(Integer.parseInt(values[0]),values[1],values[2],""));
             } else if (response.contains("create|customer")) {
                 String[] values = getArrayOfFields("{id},{name},{code}");
                 customerService.create(new Customer(Integer.parseInt(values[0]),values[1],values[2]));
@@ -111,11 +111,11 @@ public class Main {
                         values[6]));
             } else if (response.contains("create|skill")) {
                 String[] values = getArrayOfFields("{id},{name},{level}");
-                companyService.create(new Company(Integer.parseInt(values[0]),values[1],values[2]));
+                companyService.create(new Company(Integer.parseInt(values[0]),values[1],values[2],""));
 
             } else if (response.contains("update|company")) {
                 String[] values = getArrayOfFields("{id},{name},{code}");
-                companyService.update(Integer.parseInt(values[0]),new Company(Integer.parseInt(values[0]),values[1],values[2]));
+                companyService.update(Integer.parseInt(values[0]),new Company(Integer.parseInt(values[0]),values[1],values[2],""));
             } else if (response.contains("update|customer")) {
                 String[] values = getArrayOfFields("{id},{name},{code}");
                 customerService.update(Integer.parseInt(values[0]),new Customer(Integer.parseInt(values[0]),values[1],values[2]));
@@ -130,7 +130,7 @@ public class Main {
                         values[6]));
             } else if (response.contains("update|skill")) {
                 String[] values = getArrayOfFields("{id},{name},{level}");
-                companyService.update(Integer.parseInt(values[0]),new Company(Integer.parseInt(values[0]),values[1],values[2]));
+                companyService.update(Integer.parseInt(values[0]),new Company(Integer.parseInt(values[0]),values[1],values[2],""));
             }
 
             response = scanner.next();

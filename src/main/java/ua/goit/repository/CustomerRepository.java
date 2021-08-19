@@ -31,8 +31,8 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
             while (resultSet.next()){
                 Customer customer = Customer.builder()
                         .id(resultSet.getInt("customer_id"))
-                        .customer_name(resultSet.getString("customer_name"))
-                        .customer_code(resultSet.getString("customer_code"))
+                        .name(resultSet.getString("customer_name"))
+                        .code(resultSet.getString("customer_code"))
                         .build();
                 customers.add(customer);
             }
@@ -59,8 +59,8 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
                 preparedStatement.setInt(1,customer.getId());
-                preparedStatement.setString(2,customer.getCustomer_name());
-                preparedStatement.setString(3,customer.getCustomer_code());
+                preparedStatement.setString(2,customer.getName());
+                preparedStatement.setString(3,customer.getCode());
                 preparedStatement.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -97,8 +97,8 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     public void update(Integer id, Customer customer) {
         String fieldsAndValues = String.format("customer_id=%s,customer_name='%s',customer_code='%s'",
                 id,
-                customer.getCustomer_name(),
-                customer.getCustomer_code());
+                customer.getName(),
+                customer.getCode());
         String sql = String.format("UPDATE %s SET %s WHERE customer_id = %s",table,fieldsAndValues,id);
         try(Statement statement = connection.createStatement()){
             statement.executeUpdate(sql);

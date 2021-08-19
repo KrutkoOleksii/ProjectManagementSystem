@@ -31,8 +31,8 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
             while (resultSet.next()){
                 Skill skill = Skill.builder()
                         .id(resultSet.getInt("skill_id"))
-                        .skill_name(resultSet.getString("skill_name"))
-                        .skill_level(resultSet.getString("skill_level"))
+                        .name(resultSet.getString("skill_name"))
+                        .skillLevel(resultSet.getString("skill_level"))
                         .build();
                 skills.add(skill);
             }
@@ -59,8 +59,8 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
                 preparedStatement.setInt(1,skill.getId());
-                preparedStatement.setString(2,skill.getSkill_name());
-                preparedStatement.setString(3,skill.getSkill_level());
+                preparedStatement.setString(2,skill.getName());
+                preparedStatement.setString(3,skill.getSkillLevel());
                 preparedStatement.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -97,8 +97,8 @@ public class SkillRepository implements BaseRepository<Integer, Skill>{
     public void update(Integer id, Skill skill) {
         String fieldsAndValues = String.format("skill_id=%s,skill_name='%s',skill_level='%s'",
                 id,
-                skill.getSkill_name(),
-                skill.getSkill_level());
+                skill.getName(),
+                skill.getSkillLevel());
         String sql = String.format("UPDATE %s SET %s WHERE skill_id = %s",table,fieldsAndValues,id);
         try(Statement statement = connection.createStatement()){
             statement.executeUpdate(sql);

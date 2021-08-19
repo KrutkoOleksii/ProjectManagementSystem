@@ -22,9 +22,14 @@ public class Project implements Serializable, BaseEntity<Integer>{
     @Id
     @Column(name = "project_id")
     Integer id;
-    String project_name;
+    @Column(name = "project_name")
+    String name;
+    @Column(name = "cost")
     Integer cost;
-    Company company_id;
-    Customer customer_id;
-    String start_date;
+    @Column(name = "company_id")
+    Company companyId;
+    @Column(name = "customer_id")
+    Customer customerId;
+    @Column(name = "start_date")
+    String startDate;
 }

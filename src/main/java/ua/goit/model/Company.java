@@ -22,8 +22,8 @@ public class Company implements Serializable, BaseEntity<Integer>{
     @Id
     @Column(name = "company_id")
     Integer id;
-    @Column(length = 45)
-    String company_name;
-    @Column(length = 10)
-    String company_code;
+    @Column(name = "company_name", length = 45)
+    String name;
+    @Column(name = "company_code",length = 10)
+    String code;
 }
