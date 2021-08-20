@@ -1,9 +1,12 @@
 package ua.goit;
 
 import ua.goit.model.*;
+import ua.goit.repository.BaseRepository;
+import ua.goit.repository.Factory;
 import ua.goit.service.*;
 import ua.goit.service.old.*;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -16,11 +19,18 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("Hello. Follow steps below, please. For exit tape 'exit'");
-        System.out.println("What do you want (input number)? :\n 1. Operations with tables\n 2. Reports");
-        Integer response1 = scanner.nextInt();
-        if (response1==1) doingOperationsWithTables();
-        else if (response1==2) showReports();
+        BaseRepository<Long, Company> companyRepository = Factory.of(Company.class);
+        List<Company> companyList = companyRepository.findAll();
+        System.out.println(companyList);
+
+        companyRepository.close();
+
+
+//        System.out.println("Hello. Follow steps below, please. For exit tape 'exit'");
+//        System.out.println("What do you want (input number)? :\n 1. Operations with tables\n 2. Reports");
+//        Integer response1 = scanner.nextInt();
+//        if (response1==1) doingOperationsWithTables();
+//        else if (response1==2) showReports();
 
         //создать заготовки операций(закомментированные query) для создания новых проектов, разработчиков, клиентов.
         //! Не забывать о правильных связях между таблиц !

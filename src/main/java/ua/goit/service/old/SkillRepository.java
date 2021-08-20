@@ -1,5 +1,6 @@
 package ua.goit.service.old;
 
+import lombok.SneakyThrows;
 import ua.goit.model.Skill;
 import ua.goit.repository.BaseRepository;
 import ua.goit.util.DatabaseConnection;
@@ -120,7 +121,11 @@ public class SkillRepository implements BaseRepository<Long, Skill> {
             }
         }
     }
-
+    @SneakyThrows
+    @Override
+    public void close() {
+        connection.close();
+    }
     //@Override
     public boolean existsById(Long id) {
         return false;

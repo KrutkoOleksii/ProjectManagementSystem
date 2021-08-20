@@ -23,7 +23,7 @@ public class EntityServiceImpl<ID, E extends BaseEntity<ID>> implements EntitySe
 
     @Override
     public E update(ID id, E e) {
-        repository.update(id, e);
+        //repository.update(id, e);
         return repository.getOne(id);
     }
 

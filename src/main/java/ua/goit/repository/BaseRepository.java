@@ -27,4 +27,6 @@ public interface BaseRepository <ID, E extends BaseEntity<ID>> {
 
     //public long count();
 
+    void close();
+
 }

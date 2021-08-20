@@ -1,5 +1,6 @@
 package ua.goit.service.old;
 
+import lombok.SneakyThrows;
 import ua.goit.model.Company;
 import ua.goit.model.Customer;
 import ua.goit.model.Project;
@@ -136,7 +137,11 @@ public class ProjectRepository implements BaseRepository<Long, Project> {
             }
         }
     }
-
+    @SneakyThrows
+    @Override
+    public void close() {
+        connection.close();
+    }
     //@Override
     public boolean existsById(Long id) {
         return false;

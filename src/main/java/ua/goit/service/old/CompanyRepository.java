@@ -1,9 +1,11 @@
 package ua.goit.service.old;
 
+import lombok.SneakyThrows;
 import ua.goit.model.Company;
 import ua.goit.repository.BaseRepository;
 import ua.goit.util.DatabaseConnection;
 
+import java.io.Closeable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +122,11 @@ public class CompanyRepository implements BaseRepository<Long, Company> {
             }
         }
     }
-
+    @SneakyThrows
+    @Override
+    public void close() {
+        connection.close();
+    }
     //@Override
     public boolean existsById(Long id) {
         return false;

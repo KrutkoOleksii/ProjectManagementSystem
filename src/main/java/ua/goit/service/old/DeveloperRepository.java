@@ -1,5 +1,6 @@
 package ua.goit.service.old;
 
+import lombok.SneakyThrows;
 import ua.goit.model.Company;
 import ua.goit.model.Developer;
 import ua.goit.repository.BaseRepository;
@@ -152,7 +153,11 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
             }
         }
     }
-
+    @SneakyThrows
+    @Override
+    public void close() {
+        connection.close();
+    }
     //@Override
     public long count() {
         String sql = "SELECT COUNT(*) FROM " + table;
