@@ -8,7 +8,6 @@ import ua.goit.util.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +44,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
     }
 
     @Override
-    public Collection findAll() {
+    public List findAll() {
         String sql = String.format("SELECT %s FROM %s",fields,table);
         List<Developer> developers = new ArrayList<>();
         try(Statement statement = connection.createStatement()) {
@@ -67,7 +66,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
         return developers;
     }
 
-    @Override
+    //@Override
     public void deleteAll() {
         String sql = "DELETE FROM " + table;
         try(Statement statement = connection.createStatement()){
@@ -78,7 +77,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
     }
 
     @Override
-    public void save(Developer developer) {
+    public Developer save(Developer developer) {
         if (developer!=null) {
             //String values = "10,Wanda,28,F,3100,3";
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?,?)",table,fields);
@@ -94,6 +93,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
                 throwables.printStackTrace();
             }
         }
+        return developer;
     }
 
     @Override
@@ -124,7 +124,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
         return Optional.empty();
     }
 
-    @Override
+    //@Override
     public void update(Long id, Developer developer) {
         String fieldsAndValues = String.format("developer_id=%s,developer_name='%s',age=%s,sex='%s',salary=%s,company_id=%s",
                 id,
@@ -153,7 +153,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
         }
     }
 
-    @Override
+    //@Override
     public long count() {
         String sql = "SELECT COUNT(*) FROM " + table;
         try(Statement statement = connection.createStatement()){
@@ -165,7 +165,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
         return 0;
     }
 
-    @Override
+    //@Override
     public boolean existsById(Long id) {
         return false;
     }

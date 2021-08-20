@@ -6,7 +6,6 @@ import ua.goit.util.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +24,7 @@ public class SkillRepository implements BaseRepository<Long, Skill> {
     }
 
     @Override
-    public Collection<Skill> findAll() {
+    public List<Skill> findAll() {
         String sql = String.format("SELECT %s FROM %s",fields,table);
         List<Skill> skills = new ArrayList<>();
         try (Statement statement = connection.createStatement()){
@@ -44,7 +43,7 @@ public class SkillRepository implements BaseRepository<Long, Skill> {
         return skills;
     }
 
-    @Override
+    //@Override
     public void deleteAll() {
         String sql = "DELETE FROM " + table;
         try (Statement statement = connection.createStatement();){
@@ -55,7 +54,7 @@ public class SkillRepository implements BaseRepository<Long, Skill> {
     }
 
     @Override
-    public void save(Skill skill) {
+    public Skill save(Skill skill) {
         if (skill!=null) {
             //String values = "20,React,Junior"; << example
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
@@ -68,6 +67,7 @@ public class SkillRepository implements BaseRepository<Long, Skill> {
                 throwables.printStackTrace();
             }
         }
+        return skill;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class SkillRepository implements BaseRepository<Long, Skill> {
         return Optional.empty();
     }
 
-    @Override
+    //@Override
     public void update(Long id, Skill skill) {
         String fieldsAndValues = String.format("skill_id=%s,skill_name='%s',skill_level='%s'",
                 id,
@@ -121,12 +121,12 @@ public class SkillRepository implements BaseRepository<Long, Skill> {
         }
     }
 
-    @Override
+    //@Override
     public boolean existsById(Long id) {
         return false;
     }
 
-    @Override
+    //@Override
     public long count() {
         String sql = "SELECT COUNT(*) FROM " + table;
         try(Statement statement = connection.createStatement()){

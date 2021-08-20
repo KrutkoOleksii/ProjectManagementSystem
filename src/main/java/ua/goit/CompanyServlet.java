@@ -12,13 +12,12 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CompanyServlet extends HttpServlet {
 
     private final Gson gson = new Gson();
-    private final Map<String, Company> companyMap = new LinkedHashMap<>();
+    private final Map<Long, Company> companyMap = new LinkedHashMap<>();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -45,8 +44,8 @@ public class CompanyServlet extends HttpServlet {
         //BufferedReader reader = req.getReader();
         String payload = req.getReader().lines().collect(Collectors.joining("\n"));
         Company company = gson.fromJson(payload, Company.class);
-        String uuid = UUID.randomUUID().toString();
-        companyMap.put(uuid,company);
+        //String uuid = UUID.randomUUID().toString();
+        companyMap.put(company.getId(),company);
         sendAsJson(resp,company);
     }
 
@@ -54,11 +53,11 @@ public class CompanyServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String payload = req.getReader().lines().collect(Collectors.joining("\n"));
         Company company = gson.fromJson(payload, Company.class);
-        if (companyMap.containsKey(company.getCompanyId()) ) {
+        if (companyMap.containsKey(company.getId()) ) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        companyMap.put(company.getCompanyId(), company);
+        companyMap.put(company.getId(), company);
         sendAsJson(resp,company);
     }
 
@@ -82,19 +81,17 @@ public class CompanyServlet extends HttpServlet {
         writer.flush();
     }
     public CompanyServlet() {
-        String uuid1 = UUID.randomUUID().toString();
-        companyMap.put(uuid1, Company.builder()
-                .id(30)
+        //String uuid1 = UUID.randomUUID().toString();
+        companyMap.put(30L, Company.builder()
+                .id(30L)
                 .name("Servlet center")
                 .code("57473727")
-                .companyId(uuid1)
                 .build());
-        String uuid2 = UUID.randomUUID().toString();
-        companyMap.put(uuid2, Company.builder()
-                .id(31)
+        //String uuid2 = UUID.randomUUID().toString();
+        companyMap.put(31L, Company.builder()
+                .id(31L)
                 .name("Web finance")
                 .code("10011001")
-                .companyId(uuid2)
                 .build());
     }
 }

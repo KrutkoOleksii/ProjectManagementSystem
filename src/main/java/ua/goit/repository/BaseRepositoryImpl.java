@@ -5,7 +5,6 @@ import ua.goit.util.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,11 +14,13 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
     private final String fields;
     private final String fieldId;
 
-    public BaseRepositoryImpl(String table, String fields,String fieldId) {
+    //public BaseRepositoryImpl(String table, String fields,String fieldId) {
+    public BaseRepositoryImpl(Class modelClass) {
         this.connection = DatabaseConnection.getInstance().getConnection();
-        this.table = table;
-        this.fields = fields;
-        this.fieldId = fieldId;
+
+        this.table = "";//table;
+        this.fields = "";//fields;
+        this.fieldId = "";//fieldId;
     }
 
     @Override
@@ -28,7 +29,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
     }
 
     @Override
-    public Collection<E> findAll(){
+    public List<E> findAll(){
         String sql = String.format("SELECT %s FROM %s",fields,table);
         List<E> entities = new ArrayList<>();
         try(Statement statement = connection.createStatement()){
@@ -50,7 +51,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
         return entities;
     }
 
-    @Override
+    //@Override
     public void deleteAll() {
         String sql = "DELETE FROM " + table;
         try(Statement statement = connection.createStatement()){
@@ -61,7 +62,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
     }
 
     @Override
-    public void save(E e) {
+    public E save(E e) {
         if (e != null) {
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?)", table, fields);
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -75,6 +76,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
                 throwables.printStackTrace();
             }
         }
+        return e;
     }
 
     @Override
@@ -98,7 +100,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
         return Optional.empty();
     }
 
-    @Override
+    //@Override
     public void update(ID id, E e) {
 
     }
@@ -115,12 +117,12 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements BaseR
         }
     }
 
-    @Override
+    //@Override
     public boolean existsById(ID id) {
         return false;
     }
 
-    @Override
+    //@Override
     public long count() {
         String sql = "SELECT COUNT(*) FROM " + table;
         try(Statement statement = connection.createStatement()){

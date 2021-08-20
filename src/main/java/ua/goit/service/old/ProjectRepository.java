@@ -5,13 +5,10 @@ import ua.goit.model.Customer;
 import ua.goit.model.Project;
 import ua.goit.repository.BaseRepository;
 import ua.goit.service.EntityServiceImpl;
-import ua.goit.service.old.CompanyRepository;
-import ua.goit.service.old.CustomerRepository;
 import ua.goit.util.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +27,7 @@ public class ProjectRepository implements BaseRepository<Long, Project> {
     }
 
     @Override
-    public Collection<Project> findAll() {
+    public List<Project> findAll() {
         String sql = String.format("SELECT %s FROM %s",fields,table);
         List<Project> projects = new ArrayList<>();
         try(Statement statement = connection.createStatement()){
@@ -52,7 +49,7 @@ public class ProjectRepository implements BaseRepository<Long, Project> {
         return projects;
     }
 
-    @Override
+    //@Override
     public void deleteAll() {
         String sql = "DELETE FROM " + table;
         try(Statement statement = connection.createStatement()){
@@ -63,7 +60,7 @@ public class ProjectRepository implements BaseRepository<Long, Project> {
     }
 
     @Override
-    public void save(Project project) {
+    public Project save(Project project) {
         if (project!=null) {
             //String values = "10,NewAccounting,12341234";
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?,?)",table,fields);
@@ -79,6 +76,7 @@ public class ProjectRepository implements BaseRepository<Long, Project> {
                 throwables.printStackTrace();
             }
         }
+        return project;
     }
 
     @Override
@@ -109,7 +107,7 @@ public class ProjectRepository implements BaseRepository<Long, Project> {
         return Optional.empty();
     }
 
-    @Override
+    //@Override
     public void update(Long id, Project project) {
         String fieldsAndValues = String.format("project_id=%s,project_name='%s',cost=%s,company_id=%s,customer_id=%s,start_date='%s'",
                 id,
@@ -139,12 +137,12 @@ public class ProjectRepository implements BaseRepository<Long, Project> {
         }
     }
 
-    @Override
+    //@Override
     public boolean existsById(Long id) {
         return false;
     }
 
-    @Override
+    //@Override
     public long count() {
         String sql = "SELECT COUNT(*) FROM " + table;
         try(Statement statement = connection.createStatement()){

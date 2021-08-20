@@ -6,7 +6,6 @@ import ua.goit.util.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +24,7 @@ public class CompanyRepository implements BaseRepository<Long, Company> {
     }
 
     @Override
-    public Collection<Company> findAll() {
+    public List<Company> findAll() {
         String sql = String.format("SELECT %s FROM %s", fields, table);
         List<Company> companies = new ArrayList<>();
         try(Statement statement = connection.createStatement()){
@@ -44,7 +43,7 @@ public class CompanyRepository implements BaseRepository<Long, Company> {
         return companies;
     }
 
-    @Override
+    //@Override
     public void deleteAll() {
         String sql = "DELETE FROM " + table;
         try(Statement statement = connection.createStatement()){
@@ -55,7 +54,7 @@ public class CompanyRepository implements BaseRepository<Long, Company> {
     }
 
     @Override
-    public void save(Company company) {
+    public Company save(Company company) {
         if (company!=null) {
             //String values = "10,OMEGA,12341234"; << example
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
@@ -68,6 +67,7 @@ public class CompanyRepository implements BaseRepository<Long, Company> {
                 throwables.printStackTrace();
             }
         }
+        return company;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class CompanyRepository implements BaseRepository<Long, Company> {
         return Optional.empty();
     }
 
-    @Override
+    //@Override
     public void update(Long id, Company company) {
         String fieldsAndValues = String.format("company_id=%s,company_name='%s',company_code='%s'",
                 id,
@@ -121,12 +121,12 @@ public class CompanyRepository implements BaseRepository<Long, Company> {
         }
     }
 
-    @Override
+    //@Override
     public boolean existsById(Long id) {
         return false;
     }
 
-    @Override
+    //@Override
     public long count() {
         String sql = "SELECT COUNT(*) FROM " + table;
         try(Statement statement = connection.createStatement()){
