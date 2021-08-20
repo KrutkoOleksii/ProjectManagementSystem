@@ -1,6 +1,6 @@
 package ua.goit.service;
 
-import ua.goit.repository.DatabaseConnection;
+import ua.goit.util.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -14,7 +14,7 @@ public class Reporter {
         this.connection = DatabaseConnection.getInstance().getConnection();
     }
 
-    public void printReportSalaryOfProject(Integer id) {
+    public void printReportSalaryOfProject(Long id) {
         try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(salaryOfProject(id));
             while (resultSet.next()){
@@ -26,7 +26,7 @@ public class Reporter {
         }
     }
 
-    public void printReportDevelopersOfProject(Integer id) {
+    public void printReportDevelopersOfProject(Long id) {
         try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(developersOfProject(id));
             System.out.println("Developer of project with id = "+id);
@@ -78,7 +78,7 @@ public class Reporter {
         }
     }
 
-    private String salaryOfProject(Integer id) {
+    private String salaryOfProject(Long id) {
         //     * зарплату(сумму) всех разработчиков отдельного проекта
         return  String.format("SELECT project_name, sum(salary) as salary " +
                 " FROM hw2.developers " +
@@ -90,7 +90,7 @@ public class Reporter {
                 " GROUP BY project_name",id);
     }
 
-    private String developersOfProject(Integer id) {
+    private String developersOfProject(Long id) {
         //     * список разработчиков отдельного проекта
         return String.format("SELECT" +
                 " developer_name" +

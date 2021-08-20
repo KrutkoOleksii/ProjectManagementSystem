@@ -1,9 +1,13 @@
-package ua.goit.repository;
+package ua.goit.service.old;
 
 import ua.goit.model.Company;
 import ua.goit.model.Customer;
 import ua.goit.model.Project;
+import ua.goit.repository.BaseRepository;
 import ua.goit.service.EntityServiceImpl;
+import ua.goit.service.old.CompanyRepository;
+import ua.goit.service.old.CustomerRepository;
+import ua.goit.util.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class ProjectRepository implements BaseRepository<Integer, Project>{
+public class ProjectRepository implements BaseRepository<Long, Project> {
     private final Connection connection;
     private final String table = "hw2.projects";
     private final String fields = "project_id,project_name,cost,company_id,customer_id,start_date";
@@ -33,7 +37,7 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()){
                 Project project = Project.builder()
-                        .id(resultSet.getInt("project_id"))
+                        .id(resultSet.getLong("project_id"))
                         .name(resultSet.getString("project_name"))
                         .cost(resultSet.getInt("cost"))
                         .companyId((Company) resultSet.getObject("company_id"))
@@ -64,11 +68,11 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
             //String values = "10,NewAccounting,12341234";
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?,?)",table,fields);
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-                preparedStatement.setInt(1,project.getId());
+                preparedStatement.setLong(1,project.getId());
                 preparedStatement.setString(2,project.getName());
                 preparedStatement.setInt(3,project.getCost());
-                preparedStatement.setInt(4,project.getCompanyId().getId());
-                preparedStatement.setInt(5,project.getCustomerId().getId());
+                preparedStatement.setLong(4,project.getCompanyId().getId());
+                preparedStatement.setLong(5,project.getCustomerId().getId());
                 preparedStatement.setString(6,project.getStartDate());
                 preparedStatement.executeUpdate();
             } catch (SQLException throwables) {
@@ -78,24 +82,24 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     }
 
     @Override
-    public Project getOne(Integer id) {
+    public Project getOne(Long id) {
         return findById(id)
                 .map(e -> e)
                 .orElseThrow(()-> new RuntimeException("Entity with id " + id + " not found"));
     }
 
     @Override
-    public Optional<Project> findById(Integer id) {
+    public Optional<Project> findById(Long id) {
         String sql = String.format("SELECT %s FROM %s WHERE project_id = %s",fields,table,id);
         try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(sql);
             if(resultSet.next()){
                 return Optional.of(new Project(
-                        resultSet.getInt("project_id"),
+                        resultSet.getLong("project_id"),
                         resultSet.getString("project_name"),
                         resultSet.getInt("cost"),
-                        (new EntityServiceImpl<>(new CompanyRepository())).read(resultSet.getInt("company_id")),
-                        (new EntityServiceImpl<>(new CustomerRepository())).read(resultSet.getInt("customer_id")),
+                        (new EntityServiceImpl<>(new CompanyRepository())).read(resultSet.getLong("company_id")),
+                        (new EntityServiceImpl<>(new CustomerRepository())).read(resultSet.getLong("customer_id")),
                         resultSet.getString("start_date")
                 ));
             }
@@ -106,7 +110,7 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     }
 
     @Override
-    public void update(Integer id, Project project) {
+    public void update(Long id, Project project) {
         String fieldsAndValues = String.format("project_id=%s,project_name='%s',cost=%s,company_id=%s,customer_id=%s,start_date='%s'",
                 id,
                 project.getName(),
@@ -124,7 +128,7 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         if (id!=null) {
             String sql = String.format("DELETE FROM %s WHERE project_id=%s",table,id);
             try(Statement statement = connection.createStatement()){
@@ -136,7 +140,7 @@ public class ProjectRepository implements BaseRepository<Integer, Project>{
     }
 
     @Override
-    public boolean existsById(Integer id) {
+    public boolean existsById(Long id) {
         return false;
     }
 

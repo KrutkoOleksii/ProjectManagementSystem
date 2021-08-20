@@ -1,6 +1,8 @@
-package ua.goit.repository;
+package ua.goit.service.old;
 
-import ua.goit.model.Company;
+import ua.goit.model.Customer;
+import ua.goit.repository.BaseRepository;
+import ua.goit.util.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,38 +10,38 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class CompanyRepository implements BaseRepository<Integer, Company>{
+public class CustomerRepository implements BaseRepository<Long, Customer> {
     private final Connection connection;
-    private final String table = "hw2.companies";
-    private final String fields = "company_id,company_name,company_code";
+    private final String table = "hw2.customers";
+    private final String fields = "customer_id,customer_name,customer_code";
 
-    public CompanyRepository() {
+    public CustomerRepository() {
         this.connection = DatabaseConnection.getInstance().getConnection();
     }
 
     @Override
-    public List<Company> saveAll(Iterable<Company> itrbl) {
+    public List<Customer> saveAll(Iterable<Customer> itrbl) {
         return null;
     }
 
     @Override
-    public Collection<Company> findAll() {
-        String sql = String.format("SELECT %s FROM %s", fields, table);
-        List<Company> companies = new ArrayList<>();
+    public Collection<Customer> findAll() {
+        String sql = String.format("SELECT %s FROM %s",fields,table);
+        List<Customer> customers = new ArrayList<>();
         try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()){
-                Company company = Company.builder()
-                        .id(resultSet.getInt("company_id"))
-                        .name(resultSet.getString("company_name"))
-                        .code(resultSet.getString("company_code"))
+                Customer customer = Customer.builder()
+                        .id(resultSet.getLong("customer_id"))
+                        .name(resultSet.getString("customer_name"))
+                        .code(resultSet.getString("customer_code"))
                         .build();
-                companies.add(company);
+                customers.add(customer);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return companies;
+        return customers;
     }
 
     @Override
@@ -53,14 +55,14 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     }
 
     @Override
-    public void save(Company company) {
-        if (company!=null) {
-            //String values = "10,OMEGA,12341234"; << example
+    public void save(Customer customer) {
+        if (customer!=null) {
+            //String values = "10,OMEGA,12341234";
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-                preparedStatement.setInt(1,company.getId());
-                preparedStatement.setString(2,company.getName());
-                preparedStatement.setString(3,company.getCode());
+                preparedStatement.setLong(1,customer.getId());
+                preparedStatement.setString(2,customer.getName());
+                preparedStatement.setString(3,customer.getCode());
                 preparedStatement.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -69,23 +71,23 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     }
 
     @Override
-    public Company getOne(Integer id) {
+    public Customer getOne(Long id) {
         return findById(id)
                 .map(e -> e)
                 .orElseThrow(()-> new RuntimeException("Entity with id " + id + " not found"));
     }
 
     @Override
-    public Optional<Company> findById(Integer id) {
-        String sql = String.format("SELECT %s FROM %s WHERE company_id = %s",fields,table,id);
+    public Optional<Customer> findById(Long id) {
+        String sql = String.format("SELECT %s FROM %s WHERE customer_id = %s",fields,table,id.toString());
         try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(sql);
             if(resultSet.next()){
-                return Optional.of(Company.builder()
-                        .id(resultSet.getInt("company_id"))
-                        .name(resultSet.getString("company_name"))
-                        .code(resultSet.getString("company_code"))
-                        .build());
+                return Optional.of(new Customer(
+                        resultSet.getLong("customer_id"),
+                        resultSet.getString("customer_name"),
+                        resultSet.getString("customer_code")
+                ));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -94,12 +96,12 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     }
 
     @Override
-    public void update(Integer id, Company company) {
-        String fieldsAndValues = String.format("company_id=%s,company_name='%s',company_code='%s'",
+    public void update(Long id, Customer customer) {
+        String fieldsAndValues = String.format("customer_id=%s,customer_name='%s',customer_code='%s'",
                 id,
-                company.getName(),
-                company.getCode());
-        String sql = String.format("UPDATE %s SET %s WHERE company_id = %s",table,fieldsAndValues,id);
+                customer.getName(),
+                customer.getCode());
+        String sql = String.format("UPDATE %s SET %s WHERE customer_id = %s",table,fieldsAndValues,id);
         try(Statement statement = connection.createStatement()){
             statement.executeUpdate(sql);
         } catch (SQLException throwables) {
@@ -108,9 +110,9 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         if (id!=null) {
-            String sql = "DELETE FROM " + table + " WHERE company_id=" + id;
+            String sql = String.format("DELETE FROM %s WHERE customer_id=%s",table,id.toString());
             try(Statement statement = connection.createStatement()){
                 statement.executeUpdate(sql);
             } catch (SQLException throwables) {
@@ -120,7 +122,7 @@ public class CompanyRepository implements BaseRepository<Integer, Company>{
     }
 
     @Override
-    public boolean existsById(Integer id) {
+    public boolean existsById(Long id) {
         return false;
     }
 

@@ -16,12 +16,12 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "projects")
-public class Project implements Serializable, BaseEntity<Integer>{
+public class Project implements Serializable, BaseEntity<Long>{
     @Serial
     private static final long serialVersionUID = 6809572939833526455L;
     @Id
     @Column(name = "project_id")
-    Integer id;
+    Long id;
     @Column(name = "project_name")
     String name;
     @Column(name = "cost")

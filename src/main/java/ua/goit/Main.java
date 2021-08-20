@@ -1,20 +1,18 @@
 package ua.goit;
 
 import ua.goit.model.*;
-import ua.goit.repository.*;
-import ua.goit.service.EntityService;
-import ua.goit.service.EntityServiceImpl;
-import ua.goit.service.Reporter;
+import ua.goit.service.*;
+import ua.goit.service.old.*;
 
 import java.util.Scanner;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final EntityService<Integer, Company> companyService = new EntityServiceImpl<>(new CompanyRepository());
-    private static final EntityService<Integer,Customer> customerService = new EntityServiceImpl<>(new CustomerRepository());
-    private static final EntityService<Integer,Developer> developerService = new EntityServiceImpl<>(new DeveloperRepository());
-    private static final EntityService<Integer,Project> projectService = new EntityServiceImpl<>(new ProjectRepository());
-    private static final EntityService<Integer,Skill> skillService = new EntityServiceImpl<>(new SkillRepository());
+    private static final EntityService<Long, Company> companyService = new EntityServiceImpl<>(new CompanyRepository());
+    private static final EntityService<Long,Customer> customerService = new EntityServiceImpl<>(new CustomerRepository());
+    private static final EntityService<Long,Developer> developerService = new EntityServiceImpl<>(new DeveloperRepository());
+    private static final EntityService<Long,Project> projectService = new EntityServiceImpl<>(new ProjectRepository());
+    private static final EntityService<Long,Skill> skillService = new EntityServiceImpl<>(new SkillRepository());
 
     public static void main(String[] args) {
 
@@ -68,7 +66,7 @@ public class Main {
                 response = scanner.next();
                 continue;
             }
-            Integer id = Integer.parseInt(responseArray[2]);
+            Long id =  Long.parseLong(responseArray[2]);
 //            String command = responseArray[0];
 //            String table = responseArray[1];
 
@@ -96,41 +94,41 @@ public class Main {
 
             } else if (response.contains("create|company")) {
                 String[] values = getArrayOfFields("{id},{name},{code}");
-                companyService.create(new Company(Integer.parseInt(values[0]),values[1],values[2],""));
+                companyService.create(new Company(Long.parseLong(values[0]),values[1],values[2]));
             } else if (response.contains("create|customer")) {
                 String[] values = getArrayOfFields("{id},{name},{code}");
-                customerService.create(new Customer(Integer.parseInt(values[0]),values[1],values[2]));
+                customerService.create(new Customer(Long.parseLong(values[0]),values[1],values[2]));
             } else if (response.contains("create|developer")) {
                 String[] values = getArrayOfFields("{id},{name},{age},{sex},{salary},{companyId}");
-                developerService.create(new Developer(Integer.parseInt(values[0]),values[1],Integer.parseInt(values[2]),values[3],
-                        Integer.parseInt(values[4]),companyService.read(Integer.parseInt(values[5]))));
+                developerService.create(new Developer(Long.parseLong(values[0]),values[1],Integer.parseInt(values[2]),values[3],
+                        Integer.parseInt(values[4]),companyService.read(Long.parseLong(values[5]))));
             } else if (response.contains("create|project")) {
                 String[] values = getArrayOfFields("{id},{name},{cost},{companyId},{customerId},{startDate}");
-                projectService.create(new Project(Integer.parseInt(values[0]),values[1],Integer.parseInt(values[2]),
-                        companyService.read(Integer.parseInt(values[4])),customerService.read(Integer.parseInt(values[5])),
+                projectService.create(new Project(Long.parseLong(values[0]),values[1],Integer.parseInt(values[2]),
+                        companyService.read(Long.parseLong(values[4])),customerService.read(Long.parseLong(values[5])),
                         values[6]));
             } else if (response.contains("create|skill")) {
                 String[] values = getArrayOfFields("{id},{name},{level}");
-                companyService.create(new Company(Integer.parseInt(values[0]),values[1],values[2],""));
+                companyService.create(new Company(Long.parseLong(values[0]),values[1],values[2]));
 
             } else if (response.contains("update|company")) {
                 String[] values = getArrayOfFields("{id},{name},{code}");
-                companyService.update(Integer.parseInt(values[0]),new Company(Integer.parseInt(values[0]),values[1],values[2],""));
+                companyService.update(Long.parseLong(values[0]),new Company(Long.parseLong(values[0]),values[1],values[2]));
             } else if (response.contains("update|customer")) {
                 String[] values = getArrayOfFields("{id},{name},{code}");
-                customerService.update(Integer.parseInt(values[0]),new Customer(Integer.parseInt(values[0]),values[1],values[2]));
+                customerService.update(Long.parseLong(values[0]),new Customer(Long.parseLong(values[0]),values[1],values[2]));
             } else if (response.contains("update|developer")) {
                 String[] values = getArrayOfFields("{id},{name},{age},{sex},{salary},{companyId}");
-                developerService.update(Integer.parseInt(values[0]),new Developer(Integer.parseInt(values[0]),values[1],Integer.parseInt(values[2]),values[3],
-                        Integer.parseInt(values[4]),companyService.read(Integer.parseInt(values[5]))));
+                developerService.update(Long.parseLong(values[0]),new Developer(Long.parseLong(values[0]),values[1],Integer.parseInt(values[2]),values[3],
+                        Integer.parseInt(values[4]),companyService.read(Long.parseLong(values[5]))));
             } else if (response.contains("update|project")) {
                 String[] values = getArrayOfFields("{id},{name},{cost},{companyId},{customerId},{startDate}");
-                projectService.update(Integer.parseInt(values[0]),new Project(Integer.parseInt(values[0]),values[1],Integer.parseInt(values[2]),
-                        companyService.read(Integer.parseInt(values[4])),customerService.read(Integer.parseInt(values[5])),
+                projectService.update(Long.parseLong(values[0]),new Project(Long.parseLong(values[0]),values[1],Integer.parseInt(values[2]),
+                        companyService.read(Long.parseLong(values[4])),customerService.read(Long.parseLong(values[5])),
                         values[6]));
             } else if (response.contains("update|skill")) {
                 String[] values = getArrayOfFields("{id},{name},{level}");
-                companyService.update(Integer.parseInt(values[0]),new Company(Integer.parseInt(values[0]),values[1],values[2],""));
+                companyService.update(Long.parseLong(values[0]),new Company(Long.parseLong(values[0]),values[1],values[2]));
             }
 
             response = scanner.next();
@@ -163,9 +161,9 @@ public class Main {
             }
             Reporter reporter = new Reporter();
             if ("1".equals(responseArray[0])){
-                reporter.printReportSalaryOfProject(Integer.parseInt(responseArray[1]));
+                reporter.printReportSalaryOfProject(Long.parseLong(responseArray[1]));
             } else if ("2".equals(responseArray[0])) {
-                reporter.printReportDevelopersOfProject(Integer.parseInt(responseArray[1]));
+                reporter.printReportDevelopersOfProject(Long.parseLong(responseArray[1]));
             } else if ("3".equals(responseArray[0])) {
                 reporter.printReportDevelopersBySkill(responseArray[1]);
             } else if ("4".equals(responseArray[0])) {

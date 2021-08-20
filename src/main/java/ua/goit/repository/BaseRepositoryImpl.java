@@ -1,6 +1,7 @@
 package ua.goit.repository;
 
 import ua.goit.model.BaseEntity;
+import ua.goit.util.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;

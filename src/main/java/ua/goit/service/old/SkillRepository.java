@@ -1,6 +1,8 @@
-package ua.goit.repository;
+package ua.goit.service.old;
 
-import ua.goit.model.Customer;
+import ua.goit.model.Skill;
+import ua.goit.repository.BaseRepository;
+import ua.goit.util.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,44 +10,44 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomerRepository implements BaseRepository<Integer, Customer>{
+public class SkillRepository implements BaseRepository<Long, Skill> {
     private final Connection connection;
-    private final String table = "hw2.customers";
-    private final String fields = "customer_id,customer_name,customer_code";
+    private final String table = "hw2.skills";
+    private final String fields = "skill_id,skill_name,skill_level";
 
-    public CustomerRepository() {
+    public SkillRepository() {
         this.connection = DatabaseConnection.getInstance().getConnection();
     }
 
     @Override
-    public List<Customer> saveAll(Iterable<Customer> itrbl) {
+    public List<Skill> saveAll(Iterable<Skill> itrbl) {
         return null;
     }
 
     @Override
-    public Collection<Customer> findAll() {
+    public Collection<Skill> findAll() {
         String sql = String.format("SELECT %s FROM %s",fields,table);
-        List<Customer> customers = new ArrayList<>();
-        try(Statement statement = connection.createStatement()){
+        List<Skill> skills = new ArrayList<>();
+        try (Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()){
-                Customer customer = Customer.builder()
-                        .id(resultSet.getInt("customer_id"))
-                        .name(resultSet.getString("customer_name"))
-                        .code(resultSet.getString("customer_code"))
+                Skill skill = Skill.builder()
+                        .id(resultSet.getLong("skill_id"))
+                        .name(resultSet.getString("skill_name"))
+                        .skillLevel(resultSet.getString("skill_level"))
                         .build();
-                customers.add(customer);
+                skills.add(skill);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return customers;
+        return skills;
     }
 
     @Override
     public void deleteAll() {
         String sql = "DELETE FROM " + table;
-        try(Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement();){
             statement.executeUpdate(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -53,14 +55,14 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     }
 
     @Override
-    public void save(Customer customer) {
-        if (customer!=null) {
-            //String values = "10,OMEGA,12341234";
+    public void save(Skill skill) {
+        if (skill!=null) {
+            //String values = "20,React,Junior"; << example
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?)",table,fields);
-            try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-                preparedStatement.setInt(1,customer.getId());
-                preparedStatement.setString(2,customer.getName());
-                preparedStatement.setString(3,customer.getCode());
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+                preparedStatement.setLong(1,skill.getId());
+                preparedStatement.setString(2,skill.getName());
+                preparedStatement.setString(3,skill.getSkillLevel());
                 preparedStatement.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -69,22 +71,22 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     }
 
     @Override
-    public Customer getOne(Integer id) {
+    public Skill getOne(Long id) {
         return findById(id)
                 .map(e -> e)
                 .orElseThrow(()-> new RuntimeException("Entity with id " + id + " not found"));
     }
 
     @Override
-    public Optional<Customer> findById(Integer id) {
-        String sql = String.format("SELECT %s FROM %s WHERE customer_id = %s",fields,table,id.toString());
+    public Optional<Skill> findById(Long id) {
+        String sql = String.format("SELECT %s FROM %s WHERE skill_id = %s",fields,table,id);
         try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(sql);
             if(resultSet.next()){
-                return Optional.of(new Customer(
-                        resultSet.getInt("customer_id"),
-                        resultSet.getString("customer_name"),
-                        resultSet.getString("customer_code")
+                return Optional.of(new Skill(
+                        resultSet.getLong("skill_id"),
+                        resultSet.getString("skill_name"),
+                        resultSet.getString("skill_level")
                 ));
             }
         } catch (SQLException throwables) {
@@ -94,12 +96,12 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     }
 
     @Override
-    public void update(Integer id, Customer customer) {
-        String fieldsAndValues = String.format("customer_id=%s,customer_name='%s',customer_code='%s'",
+    public void update(Long id, Skill skill) {
+        String fieldsAndValues = String.format("skill_id=%s,skill_name='%s',skill_level='%s'",
                 id,
-                customer.getName(),
-                customer.getCode());
-        String sql = String.format("UPDATE %s SET %s WHERE customer_id = %s",table,fieldsAndValues,id);
+                skill.getName(),
+                skill.getSkillLevel());
+        String sql = String.format("UPDATE %s SET %s WHERE skill_id = %s",table,fieldsAndValues,id);
         try(Statement statement = connection.createStatement()){
             statement.executeUpdate(sql);
         } catch (SQLException throwables) {
@@ -108,10 +110,10 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         if (id!=null) {
-            String sql = String.format("DELETE FROM %s WHERE customer_id=%s",table,id.toString());
-            try(Statement statement = connection.createStatement()){
+            String sql = String.format("DELETE FROM %s WHERE skill_id = %s",table,id);
+            try(Statement statement = connection.createStatement();){
                 statement.executeUpdate(sql);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -120,7 +122,7 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
     }
 
     @Override
-    public boolean existsById(Integer id) {
+    public boolean existsById(Long id) {
         return false;
     }
 
@@ -135,4 +137,6 @@ public class CustomerRepository implements BaseRepository<Integer, Customer>{
         }
         return 0;
     }
+
 }
+

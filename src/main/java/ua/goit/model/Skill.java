@@ -16,12 +16,12 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "skills")
-public class Skill implements Serializable, BaseEntity<Integer>{
+public class Skill implements Serializable, BaseEntity<Long>{
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "skill_id")
-    Integer id;
+    Long id;
     @Column(name = "skill_name",length = 45)
     String name;
     @Column(name = "skill_level",length = 45)
