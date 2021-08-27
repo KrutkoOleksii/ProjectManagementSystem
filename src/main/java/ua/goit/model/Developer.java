@@ -20,13 +20,13 @@ public class Developer implements Serializable, BaseEntity<Long>{
     @Serial
     private static final long serialVersionUID = 6225466248402352490L;
     @Id
-    @Column(name = "developer_id")
+    @Column(name = "id")
     Long id;
-    @Column(name = "",length = 45)
-    String developer_name;
+    @Column(name = "name",length = 45)
+    String name;
     @Column(name = "age")
     Integer age;
-    @Column(name = "sex",length = 6)
+    @Column(name = "gender",length = 6)
     String gender;
     @Column(name = "salary")
     Integer salary;

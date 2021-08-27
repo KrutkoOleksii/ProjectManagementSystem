@@ -20,9 +20,9 @@ public class Project implements Serializable, BaseEntity<Long>{
     @Serial
     private static final long serialVersionUID = 6809572939833526455L;
     @Id
-    @Column(name = "project_id")
+    @Column(name = "id")
     Long id;
-    @Column(name = "project_name")
+    @Column(name = "name")
     String name;
     @Column(name = "cost")
     Integer cost;

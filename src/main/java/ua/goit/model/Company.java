@@ -20,10 +20,10 @@ public class Company implements Serializable, BaseEntity<Long>{
     @Serial
     private static final long serialVersionUID = 1785452969944528159L;
     @Id
-    @Column(name = "company_id")
+    @Column(name = "id")
     Long id;
-    @Column(name = "company_name", length = 45)
+    @Column(name = "name", length = 45)
     String name;
-    @Column(name = "company_code",length = 10)
+    @Column(name = "code",length = 10)
     String code;
 }

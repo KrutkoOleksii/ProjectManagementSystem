@@ -53,7 +53,8 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
                 .filter(modelField -> modelField.getAnnotation(Id.class) != null)
                 .findAny().orElseThrow(() -> new RuntimeException("Entity mast have id")))};
         String tableName = modelClass.getAnnotation(Entity.class) != null
-                ? modelClass.getAnnotation(Entity.class).toString() : modelClass.getSimpleName().toLowerCase();
+//                ? modelClass.getAnnotation(Entity.class) : modelClass.getSimpleName().toLowerCase();
+                ? "companies" : modelClass.getSimpleName().toLowerCase();
         String countValues = IntStream.range(0, mapColumnField.size()).mapToObj(p -> "?").collect(Collectors.joining(","));
         String fieldsForCreate = mapColumnField.keySet().stream().collect(Collectors.joining(","));
         String fieldsForUpdate = mapColumnField.keySet().stream().map(p -> p+"=?").collect(Collectors.joining(","));

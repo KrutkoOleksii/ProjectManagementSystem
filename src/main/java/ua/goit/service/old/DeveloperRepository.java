@@ -31,7 +31,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
             for (Developer developer: itrbl) {
                 //String.join("",sql, "(?,?,?,?,?)");
                 preparedStatement.setLong(1,developer.getId());
-                preparedStatement.setString(2,developer.getDeveloper_name());
+                preparedStatement.setString(2,developer.getName());
                 preparedStatement.setInt(3,developer.getAge());
                 preparedStatement.setString(4, developer.getGender());
                 preparedStatement.setLong(5,developer.getCompanyId().getId());
@@ -53,7 +53,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
             while (resultSet.next()) {
                 Developer developer = Developer.builder()
                         .id(resultSet.getLong("developer_id"))
-                        .developer_name(resultSet.getString("developer_name"))
+                        .name(resultSet.getString("developer_name"))
                         .age(resultSet.getInt("age"))
                         .gender(resultSet.getString("sex"))
                         .salary(resultSet.getInt("salary"))
@@ -84,7 +84,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
             String sql = String.format("INSERT INTO %s (%s) VALUES (?,?,?,?,?,?)",table,fields);
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
                 preparedStatement.setLong(1,developer.getId());
-                preparedStatement.setString(2,developer.getDeveloper_name());
+                preparedStatement.setString(2,developer.getName());
                 preparedStatement.setInt(3,developer.getAge());
                 preparedStatement.setString(4, developer.getGender());
                 preparedStatement.setLong(5,developer.getSalary());
@@ -129,7 +129,7 @@ public class DeveloperRepository implements BaseRepository<Long,Developer> {
     public void update(Long id, Developer developer) {
         String fieldsAndValues = String.format("developer_id=%s,developer_name='%s',age=%s,sex='%s',salary=%s,company_id=%s",
                 id,
-                developer.getDeveloper_name(),
+                developer.getName(),
                 developer.getAge(),
                 developer.getGender(),
                 developer.getSalary(),

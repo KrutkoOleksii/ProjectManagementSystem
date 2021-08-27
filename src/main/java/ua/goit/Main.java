@@ -5,7 +5,13 @@ import ua.goit.repository.BaseRepository;
 import ua.goit.repository.Factory;
 import ua.goit.service.*;
 import ua.goit.service.old.*;
+import ua.goit.util.DatabaseConnection;
+import ua.goit.util.ScriptExecutor;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,11 +25,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-        BaseRepository<Long, Company> companyRepository = Factory.of(Company.class);
-        List<Company> companyList = companyRepository.findAll();
-        System.out.println(companyList);
+        ScriptExecutor.start();
 
-        companyRepository.close();
+//        BaseRepository<Long, Company> companyRepository = Factory.of(Company.class);
+//        List<Company> companyList = companyRepository.findAll();
+//        System.out.println(companyList);
+//
+//        Company save = companyRepository.save(Company.builder().name("New Soft").code("77777777").build());
+//        System.out.println(save.toString());
+//        companyRepository.close();
 
 
 //        System.out.println("Hello. Follow steps below, please. For exit tape 'exit'");
