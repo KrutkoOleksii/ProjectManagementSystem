@@ -18,10 +18,10 @@ import java.util.Scanner;
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static final EntityService<Long, Company> companyService = new EntityServiceImpl<>(new CompanyRepository());
-    private static final EntityService<Long,Customer> customerService = new EntityServiceImpl<>(new CustomerRepository());
-    private static final EntityService<Long,Developer> developerService = new EntityServiceImpl<>(new DeveloperRepository());
-    private static final EntityService<Long,Project> projectService = new EntityServiceImpl<>(new ProjectRepository());
-    private static final EntityService<Long,Skill> skillService = new EntityServiceImpl<>(new SkillRepository());
+    private static final EntityService<Long, Customer> customerService = new EntityServiceImpl<>(new CustomerRepository());
+    private static final EntityService<Long, Developer> developerService = new EntityServiceImpl<>(new DeveloperRepository());
+    private static final EntityService<Long, Project> projectService = new EntityServiceImpl<>(new ProjectRepository());
+    private static final EntityService<Long, Skill> skillService = new EntityServiceImpl<>(new SkillRepository());
 
     public static void main(String[] args) {
 
