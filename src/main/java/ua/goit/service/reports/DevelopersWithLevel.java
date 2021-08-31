@@ -1,4 +1,4 @@
-package ua.goit.repository.reports;
+package ua.goit.service.reports;
 
 import lombok.SneakyThrows;
 
@@ -10,12 +10,12 @@ public class DevelopersWithLevel extends ReportImpl<String> {
     protected String getQuery(String level) {
         //     * список всех Middle разработчиков
         return String.format("SELECT" +
-                " developer_name" +
+                " developers.name" +
                 " FROM hw2.developers" +
                 " INNER JOIN hw2.developer_skill" +
-                " ON developer_skill.developer_id = developers.developer_id" +
+                " ON developer_skill.developer_id = developers.id" +
                 " INNER JOIN hw2.skills" +
-                " ON developer_skill.skill_id = skills.skill_id" +
+                " ON developer_skill.skill_id = skills.id" +
                 " WHERE skills.skill_level='%s'",level);
     }
 
@@ -24,7 +24,7 @@ public class DevelopersWithLevel extends ReportImpl<String> {
     protected String printResult(ResultSet resultSet, String level) {
         String result = String.format("*** Developers with level '%s':\n", level);
         while (resultSet.next()){
-            String.join("", result, resultSet.getString("developer_name"));
+            result = String.join("", result, resultSet.getString("developers.name"),"\n");
         }
         return result;
     }

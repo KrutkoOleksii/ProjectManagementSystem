@@ -31,5 +31,6 @@ public class Developer implements Serializable, BaseEntity<Long>{
     @Column(name = "salary")
     Integer salary;
     @Column(name = "company_id")
-    Company companyId;
+    Long companyId;
+
 }

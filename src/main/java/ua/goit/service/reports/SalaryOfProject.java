@@ -1,4 +1,4 @@
-package ua.goit.repository.reports;
+package ua.goit.service.reports;
 
 import lombok.SneakyThrows;
 
@@ -9,14 +9,14 @@ public class SalaryOfProject extends ReportImpl<Long>{
     @Override
     protected String getQuery(Long id) {
         //     * зарплату(сумму) всех разработчиков отдельного проекта
-        return  String.format("SELECT project_name, sum(salary) as salary " +
+        return  String.format("SELECT projects.name, sum(salary) as salary " +
                 " FROM hw2.developers " +
                 " INNER JOIN hw2.developer_project " +
-                " ON developer_project.developer_id = developers.developer_id " +
+                " ON developer_project.developer_id = developers.id " +
                 " INNER JOIN hw2.projects " +
-                " ON developer_project.project_id = projects.project_id " +
-                " WHERE projects.project_id=%s" +
-                " GROUP BY project_name", id);
+                " ON developer_project.project_id = projects.id " +
+                " WHERE projects.id=%s" +
+                " GROUP BY projects.name", id);
     }
 
     @SneakyThrows
@@ -24,7 +24,7 @@ public class SalaryOfProject extends ReportImpl<Long>{
     protected String printResult(ResultSet resultSet, Long id) {
         while (resultSet.next()){
             return String.format("Salary of project %s : %s",
-                    resultSet.getString("project_name"),
+                    resultSet.getString("projects.name"),
                     resultSet.getString("salary"));
         }
         return null;

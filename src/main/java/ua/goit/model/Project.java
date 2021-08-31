@@ -27,9 +27,10 @@ public class Project implements Serializable, BaseEntity<Long>{
     @Column(name = "cost")
     Integer cost;
     @Column(name = "company_id")
-    Company companyId;
+    Long companyId;
     @Column(name = "customer_id")
-    Customer customerId;
+    Long customerId;
     @Column(name = "start_date")
     String startDate;
+
 }

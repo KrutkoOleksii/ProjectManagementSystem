@@ -32,13 +32,8 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
     private final PreparedStatement createPreparedStatement;
     private final PreparedStatement updatePreparedStatement;
 
-//    private final String table;
-//    private final String fields;
-//    private final String fieldId;
-
-    //public BaseRepositoryImpl(String table, String fields,String fieldId) {
     @SneakyThrows
-    public BaseRepositoryImpl(Class modelClass) {
+    public BaseRepositoryImpl(Class<E> modelClass) {
 
         this.connection = DatabaseConnection.getInstance().getConnection();
         this.databaseSchemaName = PropertiesLoader.getProperty("db.name");
@@ -51,10 +46,9 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
         String generatedColumns[] = {getColumn(Arrays.stream(this.modelClass.getDeclaredFields())
                 .filter(modelField -> !Modifier.isStatic(modelField.getModifiers()))
                 .filter(modelField -> modelField.getAnnotation(Id.class) != null)
-                .findAny().orElseThrow(() -> new RuntimeException("Entity mast have id")))};
+                .findAny().orElseThrow(() -> new RuntimeException("Entity must have id")))};
         String tableName = modelClass.getAnnotation(Entity.class) != null
-//                ? modelClass.getAnnotation(Entity.class) : modelClass.getSimpleName().toLowerCase();
-                ? "companies" : modelClass.getSimpleName().toLowerCase();
+                ? modelClass.getAnnotation(Entity.class).name() : modelClass.getSimpleName().toLowerCase();
         String countValues = IntStream.range(0, mapColumnField.size()).mapToObj(p -> "?").collect(Collectors.joining(","));
         String fieldsForCreate = mapColumnField.keySet().stream().collect(Collectors.joining(","));
         String fieldsForUpdate = mapColumnField.keySet().stream().map(p -> p+"=?").collect(Collectors.joining(","));
@@ -62,11 +56,11 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
         this.findAllPreparedStatement = connection.prepareStatement(
                 "SELECT * FROM " + table, generatedColumns);
         this.findByIdPreparedStatement = connection.prepareStatement(
-                "SELECT * FROM " + table + "WHERE id=?", generatedColumns);
+                "SELECT * FROM " + table + " WHERE id=?", generatedColumns);
         this.deletePreparedStatement = connection.prepareStatement(
-                "DELETE FROM " + table + "WHERE id=?", generatedColumns);
+                "DELETE FROM " + table + " WHERE id=?", generatedColumns);
         this.createPreparedStatement = connection.prepareStatement(
-                "INSERT INTO " + table + "(" + fieldsForCreate + ") VALUES (" + countValues + ")", generatedColumns);
+                "INSERT INTO " + table + " (" + fieldsForCreate + ") VALUES (" + countValues + ")", generatedColumns);
         this.updatePreparedStatement = connection.prepareStatement(
                 "UPDATE " + table + " SET " + fieldsForUpdate + " WHERE id=?", generatedColumns);
     }
@@ -116,17 +110,11 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
     @Override
     public List<E> findAll(){
         return parse(findAllPreparedStatement.executeQuery());
-
     }
 
     //@Override
     public void deleteAll() {
-//        String sql = "DELETE FROM " + table;
-//        try(Statement statement = connection.createStatement()){
-//            statement.executeUpdate(sql);
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
+
     }
 
     @SneakyThrows
@@ -143,7 +131,6 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
     @Override
     public E getOne(ID id) {
         return findById(id)
-                //.map(e -> e)
                 .orElseThrow(()-> new RuntimeException("Entity with id " + id + " not found"));
     }
 
@@ -155,17 +142,6 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
         if (list.isEmpty()) return Optional.empty();
         if (list.size() > 1) throw  new RuntimeException("return more than one result");
         return Optional.of(list.get(0));
-
-//        String sql = String.format("SELECT %s FROM %s WHERE %s = %s", fields, table, fieldId, id.toString());
-//        try(Statement statement = connection.createStatement()){
-//            ResultSet resultSet = statement.executeQuery(sql);
-//            if(resultSet.next()){
-//                return resultSet.getObject(fieldId, Optional.class);
-//            }
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//        return Optional.empty();
     }
 
 //    //@Override
@@ -178,15 +154,6 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
     public void deleteById(ID id) {
         deletePreparedStatement.setObject(1,id);
         deletePreparedStatement.executeUpdate();
-
-//        if (id!=null) {
-//            String sql = String.format("DELETE FROM %s WHERE %s=%s", table, fieldId, id.toString());
-//            try(Statement statement = connection.createStatement()){
-//                statement.executeUpdate(sql);
-//            } catch (SQLException throwables) {
-//                throwables.printStackTrace();
-//            }
-//        }
     }
 
     @SneakyThrows
@@ -199,17 +166,5 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
     public boolean existsById(ID id) {
         return false;
     }
-
-    //@Override
-//    public long count() {
-//        String sql = "SELECT COUNT(*) FROM " + table;
-//        try(Statement statement = connection.createStatement()){
-//            ResultSet resultSet = statement.executeQuery(sql);
-//            return resultSet.getInt("COUNT(*)");
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//        return 0;
-//    }
 
 }
