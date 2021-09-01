@@ -60,9 +60,9 @@ public class Main {
 
         String helpString =
                 "print a formatted string for operations with tables (company, customer, developer, project, skill):\n" +
-                        "    for CREATE:  create|{table}|{id}\n" +
+                        "    for CREATE:  create|{table}\n" +
                         "    for READ:    get|{table}|{id}\n" +
-                        "    for UPDATE:  update|{table}|{id}\n" +
+                        "    for UPDATE:  update|{table}\n" +
                         "    for DELETE:  delete|{table}|{id}\n" +
                         "    for help:    help\n" +
                         "    for exit:    exit";
@@ -75,16 +75,20 @@ public class Main {
                 continue;
             }
             String[] responseArray = response.split("\\|");
-            if (responseArray.length < 3) {
+            if (responseArray.length < 2) {
                 System.out.println("print correct string");
                 response = scanner.next();
                 continue;
             }
-            Long id =  Long.parseLong(responseArray[2]);
-            String className = Character.toUpperCase(responseArray[1].charAt(0)) + responseArray[1].substring(1);
             String operation = responseArray[0];
+            String className = Character.toUpperCase(responseArray[1].charAt(0)) + responseArray[1].substring(1);
             Class aClass = Class.forName("ua.goit.model."+className);
-
+            Long id = 0L;
+            if (("get".equals(operation) || "delete".equals(operation)) & responseArray.length < 3){
+                System.out.println("print correct string (with ID in third position)");
+                response = scanner.next();
+                continue;
+            } else if("get".equals(operation) || "delete".equals(operation)) id = Long.parseLong(responseArray[2]);
             if        ("get".equals(operation)){
                 BaseEntity baseEntity = Factory.of(aClass).getOne(id);
                 System.out.println(baseEntity);

@@ -7,26 +7,20 @@ import java.util.Optional;
 
 public interface BaseRepository <ID, E extends BaseEntity<ID>> {
 
-    public List<E> saveAll(Iterable<E> itrbl);
+    List<E> saveAll(Iterable<E> itrbl);
 
-    public List<E> findAll();
+    List<E> findAll();
 
-    //public void deleteAll();
+    //void deleteAll();
 
-    public E save(E e);
+    E save(E e);
 
-    public E getOne(ID id);
+    E getOne(ID id);
 
-    public Optional<E> findById(ID id);
+    Optional<E> findById(ID id);
 
-    //public void update(ID id, E e);
+    //void update(ID id, E e);
 
-    public void deleteById(ID id);
-
-    //public boolean existsById(ID id);
-
-    //public long count();
-
-    void close();
+    void deleteById(ID id);
 
 }

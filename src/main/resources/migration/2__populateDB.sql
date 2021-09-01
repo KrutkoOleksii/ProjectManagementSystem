@@ -26,14 +26,14 @@ INSERT INTO hw2.skills VALUES ('10', 'C++', 'Senior');
 INSERT INTO hw2.skills VALUES ('11', 'C#',  'Senior');
 INSERT INTO hw2.skills VALUES ('12', 'JS',  'Senior');
 
-INSERT INTO hw2.projects VALUES ('1', 'Domino',       '1', '1', '2020-01-01');
-INSERT INTO hw2.projects VALUES ('2', 'Opera 3',      '1', '2', '2020-03-01');
-INSERT INTO hw2.projects VALUES ('3', 'Integro',      '2', '1', '2020-12-12');
-INSERT INTO hw2.projects VALUES ('4', 'Anagramma',    '2', '2', '2021-03-02');
-INSERT INTO hw2.projects VALUES ('5', 'Diadas',       '2', '3', '2021-05-15');
-INSERT INTO hw2.projects VALUES ('6', 'DueForte',     '3', '1', '2020-09-01');
-INSERT INTO hw2.projects VALUES ('7', 'Thunder',      '3', '2', '2020-11-11');
-INSERT INTO hw2.projects VALUES ('8', 'BusinessGame', '3', '3', '2020-06-27');
+INSERT INTO hw2.projects VALUES ('1', 'Domino',       '1', '1', '1000000', '2020-01-01');
+INSERT INTO hw2.projects VALUES ('2', 'Opera 3',      '1', '2', '1500000', '2020-03-01');
+INSERT INTO hw2.projects VALUES ('3', 'Integro',      '2', '1',  '800000', '2020-12-12');
+INSERT INTO hw2.projects VALUES ('4', 'Anagramma',    '2', '2',  '900000', '2021-03-02');
+INSERT INTO hw2.projects VALUES ('5', 'Diadas',       '2', '3', '1200000', '2021-05-15');
+INSERT INTO hw2.projects VALUES ('6', 'DueForte',     '3', '1', '2000000', '2020-09-01');
+INSERT INTO hw2.projects VALUES ('7', 'Thunder',      '3', '2', '1800000', '2020-11-11');
+INSERT INTO hw2.projects VALUES ('8', 'BusinessGame', '3', '3',  '700000', '2020-06-27');
 
 INSERT INTO hw2.developer_skill (skill_id, developer_id) VALUES ('9', '1');
 INSERT INTO hw2.developer_skill (skill_id, developer_id) VALUES ('5', '1');

@@ -98,9 +98,9 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
 
     @SneakyThrows
     @Override
-    public List<E> saveAll(Iterable<E> itrbl) {
+    public List<E> saveAll(Iterable<E> iterable) {
         List<E> list = new ArrayList<>();
-        for(E e : itrbl){
+        for(E e : iterable){
             list.add(save(e));
         }
         return list;
@@ -114,7 +114,6 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
 
     //@Override
     public void deleteAll() {
-
     }
 
     @SneakyThrows
@@ -127,6 +126,10 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
             return executeStatement(updatePreparedStatement, e);
         }
     }
+
+//    //@Override
+//    public void update(ID id, E e) {
+//    }
 
     @Override
     public E getOne(ID id) {
@@ -144,11 +147,6 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
         return Optional.of(list.get(0));
     }
 
-//    //@Override
-//    public void update(ID id, E e) {
-//
-//    }
-
     @SneakyThrows
     @Override
     public void deleteById(ID id) {
@@ -160,11 +158,6 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
     @Override
     public void close() {
         connection.close();
-    }
-
-    //@Override
-    public boolean existsById(ID id) {
-        return false;
     }
 
 }

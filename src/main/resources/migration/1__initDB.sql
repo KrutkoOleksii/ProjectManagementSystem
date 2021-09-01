@@ -35,6 +35,7 @@ CREATE TABLE hw2.projects (
   name VARCHAR(45) NOT NULL,
   company_id INT NOT NULL,
   customer_id INT NOT NULL,
+  cost INT NOT NULL,
   start_date DATE,
   PRIMARY KEY (id),
   FOREIGN KEY (company_id) REFERENCES  hw2.companies(id),
