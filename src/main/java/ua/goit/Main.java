@@ -89,6 +89,7 @@ public class Main {
                 response = scanner.next();
                 continue;
             } else if("get".equals(operation) || "delete".equals(operation)) id = Long.parseLong(responseArray[2]);
+
             if        ("get".equals(operation)){
                 BaseEntity baseEntity = Factory.of(aClass).getOne(id);
                 System.out.println(baseEntity);
