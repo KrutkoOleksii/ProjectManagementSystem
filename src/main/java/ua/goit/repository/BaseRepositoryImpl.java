@@ -24,7 +24,6 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
     private final Class<E> modelClass;
     private final ObjectMapper jacksonMapper;
     private final Map<String,String> mapColumnField;
-    private final String databaseSchemaName;
 
     private final PreparedStatement findAllPreparedStatement;
     private final PreparedStatement findByIdPreparedStatement;
@@ -34,16 +33,15 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
 
     @SneakyThrows
     public BaseRepositoryImpl(Class<E> modelClass) {
-
+        String databaseSchemaName = PropertiesLoader.getProperty("db.name");
         this.connection = DatabaseConnection.getInstance().getConnection();
-        this.databaseSchemaName = PropertiesLoader.getProperty("db.name");
         this.modelClass = modelClass;
         this.jacksonMapper = new ObjectMapper();
         this.mapColumnField = Arrays.stream(this.modelClass.getDeclaredFields())
                 .filter(modelField -> !Modifier.isStatic(modelField.getModifiers()))
                 .collect(Collectors.toMap(modelField -> getColumn(modelField), modelField -> modelField.getName()));
 
-        String generatedColumns[] = {getColumn(Arrays.stream(this.modelClass.getDeclaredFields())
+        String[] generatedColumns = {getColumn(Arrays.stream(this.modelClass.getDeclaredFields())
                 .filter(modelField -> !Modifier.isStatic(modelField.getModifiers()))
                 .filter(modelField -> modelField.getAnnotation(Id.class) != null)
                 .findAny().orElseThrow(() -> new RuntimeException("Entity must have id")))};
@@ -52,7 +50,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
         String countValues = IntStream.range(0, mapColumnField.size()).mapToObj(p -> "?").collect(Collectors.joining(","));
         String fieldsForCreate = mapColumnField.keySet().stream().collect(Collectors.joining(","));
         String fieldsForUpdate = mapColumnField.keySet().stream().map(p -> p+"=?").collect(Collectors.joining(","));
-        String table = databaseSchemaName+"."+tableName;
+        String table = databaseSchemaName +"."+tableName;
         this.findAllPreparedStatement = connection.prepareStatement(
                 "SELECT * FROM " + table, generatedColumns);
         this.findByIdPreparedStatement = connection.prepareStatement(

@@ -13,7 +13,7 @@ public class DatabaseConnection implements Closeable {
     private final static String PASSWORD = PropertiesLoader.getProperty("db.password");
     private final static String JDBC_DRIVER = PropertiesLoader.getProperty("db.driver");
     private static DatabaseConnection databaseConnection;
-    private Connection connection;
+    private final Connection connection;
 
     @SneakyThrows
     private DatabaseConnection() {
