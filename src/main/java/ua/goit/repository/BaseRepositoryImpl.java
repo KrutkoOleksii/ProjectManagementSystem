@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 
 public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Closeable, BaseRepository <ID,E>{
 
-    private final Connection connection;
+    protected final Connection connection;
 
     private final Class<E> modelClass;
     private final ObjectMapper jacksonMapper;
@@ -110,10 +110,6 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
         return parse(findAllPreparedStatement.executeQuery());
     }
 
-    //@Override
-    public void deleteAll() {
-    }
-
     @SneakyThrows
     @Override
     public E save(E e) {
@@ -124,10 +120,6 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
             return executeStatement(updatePreparedStatement, e);
         }
     }
-
-//    //@Override
-//    public void update(ID id, E e) {
-//    }
 
     @Override
     public E getOne(ID id) {
