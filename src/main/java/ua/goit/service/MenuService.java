@@ -34,7 +34,7 @@ public class MenuService {
                 break;
             }
             else response = scanner.next();
-        };
+        }
     }
 
     @SneakyThrows
@@ -59,7 +59,7 @@ public class MenuService {
                 continue;
             } else if ("mainmenu".equals(response)){
                 printNainMenu();
-                continue;
+                break;
             }
             String[] responseArray = response.split("\\|");
             if (responseArray.length < 2) {
