@@ -132,39 +132,23 @@ public class MenuConsoleController {
                 continue;
             }
             if ("1".equals(responseArray[0])){
-//                ProjectRepository projectRepository = new ProjectRepository(Project.class);
-//                System.out.println(projectRepository.salaryOfProject(Long.parseLong(responseArray[1])));
                 Report report = new SalaryOfProject();
                 System.out.println(report.getReport(Long.parseLong(responseArray[1])));
             } else if ("2".equals(responseArray[0])) {
-//                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
-//                System.out.println(developerRepository.developerOfProject(Long.parseLong(responseArray[1])));
                 Report report = new DevelopersOfProject();
                 System.out.println(report.getReport(Long.parseLong(responseArray[1])));
             } else if ("3".equals(responseArray[0])) {
-//                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
-//                System.out.println(developerRepository.developerWithSkill(responseArray[1]));
                 Report report = new DevelopersWithSkill();
                 System.out.println(report.getReport(responseArray[1]));
             } else if ("4".equals(responseArray[0])) {
-//                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
-//                System.out.println(developerRepository.developerWithLevel(responseArray[1]));
                 Report report = new DevelopersWithLevel();
                 System.out.println(report.getReport(responseArray[1]));
             } else if ("5".equals(responseArray[0])) {
-//                ProjectRepository projectRepository = new ProjectRepository(Project.class);
-//                System.out.println(projectRepository.listOfProject());
                 Report report = new ListOfProjects();
                 System.out.println(report.getReport(""));
             }
             response = scanner.next();
         }
-    }
-
-    private static String[] getArrayOfFields(String fields) {
-        System.out.println(String.format("Well, please input parameters in comma separated string: %s",fields));
-        String response = scanner.next();
-        return response.split(",");
     }
 
     private static BaseEntity getEntity(Map<String,String> mapColumnField, Class modelClass){
@@ -176,8 +160,7 @@ public class MenuConsoleController {
             mapEntity.put(key,response);
         }
         ObjectMapper jacksonMapper = new ObjectMapper();
-        BaseEntity convertValue = (BaseEntity) jacksonMapper.convertValue(mapEntity, modelClass);
-        return convertValue;
+        return (BaseEntity) jacksonMapper.convertValue(mapEntity, modelClass);
     }
 
     private static String getColumn(Field modelField) {

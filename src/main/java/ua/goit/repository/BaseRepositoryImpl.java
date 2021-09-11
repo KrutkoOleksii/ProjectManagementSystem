@@ -51,6 +51,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
         String fieldsForCreate = mapColumnField.keySet().stream().collect(Collectors.joining(","));
         String fieldsForUpdate = mapColumnField.keySet().stream().map(p -> p+"=?").collect(Collectors.joining(","));
         String table = databaseSchemaName +"."+tableName;
+
         this.findAllPreparedStatement = connection.prepareStatement(
                 "SELECT * FROM " + table, generatedColumns);
         this.findByIdPreparedStatement = connection.prepareStatement(
