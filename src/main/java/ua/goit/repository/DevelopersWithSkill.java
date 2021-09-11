@@ -1,4 +1,4 @@
-package ua.goit.repository.reports;
+package ua.goit.repository;
 
 import lombok.SneakyThrows;
 
@@ -23,8 +23,8 @@ public class DevelopersWithSkill extends ReportImpl<String> {
     @Override
     protected String printResult(ResultSet resultSet, String skill) {
         String result = String.format("*** Developers with skill '%s':\n", skill);
-        while (resultSet.next()){
-            result = String.join("", result, resultSet.getString("developers.name"),"\n");
+        while (resultSet.next()) {
+            result = String.join("", result, resultSet.getString("developers.name"), "\n");
         }
         return result;
     }

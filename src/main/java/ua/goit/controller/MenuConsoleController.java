@@ -3,11 +3,9 @@ package ua.goit.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import ua.goit.model.BaseEntity;
-import ua.goit.model.Developer;
-import ua.goit.model.Project;
-import ua.goit.repository.DeveloperRepository;
-import ua.goit.repository.Factory;
-import ua.goit.repository.ProjectRepository;
+import ua.goit.repository.*;
+import ua.goit.util.PropertiesLoader;
+
 
 import javax.persistence.Column;
 import java.lang.reflect.Field;
@@ -42,7 +40,7 @@ public class MenuConsoleController {
 
     @SneakyThrows
     public static void doingOperationsWithTables() {
-
+        String modelPackage = PropertiesLoader.getProperty("modelPackage");
         String helpString =
                 "print a formatted string for operations with tables (company, customer, developer, project, skill):\n" +
                         "    for CREATE:  create|{table}\n" +
@@ -72,7 +70,7 @@ public class MenuConsoleController {
             }
             String operation = responseArray[0];
             String className = Character.toUpperCase(responseArray[1].charAt(0)) + responseArray[1].substring(1);
-            Class aClass = Class.forName("ua.goit.model."+className);
+            Class aClass = Class.forName(modelPackage + className);
             Long id = 0L;
             if (("get".equals(operation) || "delete".equals(operation)) & responseArray.length < 3){
                 System.out.println("print correct string (with ID in third position)");
@@ -134,30 +132,30 @@ public class MenuConsoleController {
                 continue;
             }
             if ("1".equals(responseArray[0])){
-                ProjectRepository projectRepository = new ProjectRepository(Project.class);
-                System.out.println(projectRepository.salaryOfProject(Long.parseLong(responseArray[1])));
-//                Report report = new SalaryOfProject();
-//                System.out.println(report.getReport(Long.parseLong(responseArray[1])));
+//                ProjectRepository projectRepository = new ProjectRepository(Project.class);
+//                System.out.println(projectRepository.salaryOfProject(Long.parseLong(responseArray[1])));
+                Report report = new SalaryOfProject();
+                System.out.println(report.getReport(Long.parseLong(responseArray[1])));
             } else if ("2".equals(responseArray[0])) {
-                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
-                System.out.println(developerRepository.developerOfProject(Long.parseLong(responseArray[1])));
-//                Report report = new DevelopersOfProject();
-//                System.out.println(report.getReport(Long.parseLong(responseArray[1])));
+//                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
+//                System.out.println(developerRepository.developerOfProject(Long.parseLong(responseArray[1])));
+                Report report = new DevelopersOfProject();
+                System.out.println(report.getReport(Long.parseLong(responseArray[1])));
             } else if ("3".equals(responseArray[0])) {
-                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
-                System.out.println(developerRepository.developerWithSkill(responseArray[1]));
-//                Report report = new DevelopersWithSkill();
-//                System.out.println(report.getReport(responseArray[1]));
+//                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
+//                System.out.println(developerRepository.developerWithSkill(responseArray[1]));
+                Report report = new DevelopersWithSkill();
+                System.out.println(report.getReport(responseArray[1]));
             } else if ("4".equals(responseArray[0])) {
-                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
-                System.out.println(developerRepository.developerWithLevel(responseArray[1]));
-//                Report report = new DevelopersWithLevel();
-//                System.out.println(report.getReport(responseArray[1]));
+//                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
+//                System.out.println(developerRepository.developerWithLevel(responseArray[1]));
+                Report report = new DevelopersWithLevel();
+                System.out.println(report.getReport(responseArray[1]));
             } else if ("5".equals(responseArray[0])) {
-                ProjectRepository projectRepository = new ProjectRepository(Project.class);
-                System.out.println(projectRepository.listOfProject());
-//                Report report = new ListOfProjects();
-//                System.out.println(report.getReport(""));
+//                ProjectRepository projectRepository = new ProjectRepository(Project.class);
+//                System.out.println(projectRepository.listOfProject());
+                Report report = new ListOfProjects();
+                System.out.println(report.getReport(""));
             }
             response = scanner.next();
         }

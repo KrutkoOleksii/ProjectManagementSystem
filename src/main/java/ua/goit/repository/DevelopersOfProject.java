@@ -1,4 +1,4 @@
-package ua.goit.repository.reports;
+package ua.goit.repository;
 
 import lombok.SneakyThrows;
 
@@ -16,15 +16,15 @@ public class DevelopersOfProject extends ReportImpl<Long> {
                 " ON developer_project.developer_id = developers.id" +
                 " INNER JOIN hw2.projects" +
                 " ON developer_project.project_id = projects.id" +
-                " WHERE projects.id=%s",id);
+                " WHERE projects.id=%s", id);
     }
 
     @SneakyThrows
     @Override
     protected String printResult(ResultSet resultSet, Long id) {
-        String result = String.format("Developer of project with id = %s:\n",id);
-        while (resultSet.next()){
-            result = String.join("",result, resultSet.getString("developers.name"),"\n");
+        String result = String.format("Developer of project with id = %s:\n", id);
+        while (resultSet.next()) {
+            result = String.join("", result, resultSet.getString("developers.name"), "\n");
         }
         return result;
     }

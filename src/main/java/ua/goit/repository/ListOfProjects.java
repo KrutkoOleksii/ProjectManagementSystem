@@ -1,4 +1,4 @@
-package ua.goit.repository.reports;
+package ua.goit.repository;
 
 import lombok.SneakyThrows;
 
@@ -26,14 +26,14 @@ public class ListOfProjects extends ReportImpl<Object> {
     @Override
     protected String printResult(ResultSet resultSet, Object o) {
         String result = ("*** All projects: (startDate - projectName - countOfDevs)\n");
-        while (resultSet.next()){
+        while (resultSet.next()) {
             result = String.join("",
                     result,
                     String.join(" - ",
-                    resultSet.getDate("start_date").toString(),
-                    resultSet.getString("projects.name"),
-                    resultSet.getString("count_of_devs")+"\n"
-            ));
+                            resultSet.getDate("start_date").toString(),
+                            resultSet.getString("projects.name"),
+                            resultSet.getString("count_of_devs") + "\n"
+                    ));
         }
         return result;
     }

@@ -1,4 +1,4 @@
-package ua.goit.repository.reports;
+package ua.goit.repository;
 
 import ua.goit.util.DatabaseConnection;
 
@@ -15,8 +15,8 @@ public abstract class ReportImpl<K> implements Report<K> {
     }
 
     @Override
-    public String getReport(K k){
-        try(Statement statement = connection.createStatement()){
+    public String getReport(K k) {
+        try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(getQuery(k));
             return printResult(resultSet, k);
         } catch (SQLException throwables) {
