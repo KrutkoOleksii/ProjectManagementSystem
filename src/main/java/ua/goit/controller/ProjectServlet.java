@@ -2,6 +2,7 @@ package ua.goit.controller;
 
 import com.google.gson.Gson;
 import ua.goit.model.Company;
+import ua.goit.model.Project;
 import ua.goit.repository.BaseRepository;
 import ua.goit.repository.Factory;
 
@@ -13,14 +14,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.stream.Collectors;
 
-@WebServlet("/company")
-public class CompanyServlet extends HttpServlet {
+@WebServlet("/project")
+public class ProjectServlet extends HttpServlet {
 
-    private final BaseRepository<Long,Company> repository;
+    private final BaseRepository<Long, Project> repository;
     private final Gson gson = new Gson();
 
-    public CompanyServlet() {
-        repository = Factory.of(Company.class);
+    public ProjectServlet() {
+        repository = Factory.of(Project.class);
     }
 
     @Override
@@ -41,15 +42,15 @@ public class CompanyServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String payload = req.getReader().lines().collect(Collectors.joining("\n"));
-        Company company = gson.fromJson(payload, Company.class);
-        sendAsJson(resp, repository.save(company));
+        Project project = gson.fromJson(payload, Project.class);
+        sendAsJson(resp, repository.save(project));
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String payload = req.getReader().lines().collect(Collectors.joining("\n"));
-        Company company = gson.fromJson(payload, Company.class);
-        sendAsJson(resp, repository.save(company));
+        Project project = gson.fromJson(payload, Project.class);
+        sendAsJson(resp, repository.save(project));
     }
 
     @Override

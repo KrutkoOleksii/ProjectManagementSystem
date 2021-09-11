@@ -11,7 +11,7 @@ public class Main {
 
         //ScriptExecutor.start();
 
-        MenuConsoleController.printNainMenu();
+        //MenuConsoleController.printNainMenu();
 
         //создать заготовки операций(закомментированные query) для создания новых проектов, разработчиков, клиентов.
         //! Не забывать о правильных связях между таблиц !
