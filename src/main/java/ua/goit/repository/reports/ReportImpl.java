@@ -1,4 +1,4 @@
-package ua.goit.service.reports;
+package ua.goit.repository.reports;
 
 import ua.goit.util.DatabaseConnection;
 

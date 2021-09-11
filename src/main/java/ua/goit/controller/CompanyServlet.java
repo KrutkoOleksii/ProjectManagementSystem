@@ -1,4 +1,4 @@
-package ua.goit.servlet;
+package ua.goit.controller;
 
 import com.google.gson.Gson;
 import ua.goit.model.Company;

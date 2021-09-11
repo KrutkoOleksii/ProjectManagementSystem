@@ -1,23 +1,8 @@
 package ua.goit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
-import ua.goit.model.BaseEntity;
-import ua.goit.model.Company;
-import ua.goit.repository.Factory;
-import ua.goit.service.BaseService;
-import ua.goit.service.MenuService;
-import ua.goit.service.reports.*;
-import ua.goit.util.ScriptExecutor;
+import ua.goit.controller.MenuConsoleController;
 
-import javax.persistence.Column;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
@@ -26,7 +11,7 @@ public class Main {
 
         //ScriptExecutor.start();
 
-        MenuService.printNainMenu();
+        MenuConsoleController.printNainMenu();
 
         //создать заготовки операций(закомментированные query) для создания новых проектов, разработчиков, клиентов.
         //! Не забывать о правильных связях между таблиц !

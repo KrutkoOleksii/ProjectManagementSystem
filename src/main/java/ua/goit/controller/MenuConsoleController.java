@@ -1,4 +1,4 @@
-package ua.goit.service;
+package ua.goit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class MenuService {
+public class MenuConsoleController {
 
     private static final Scanner scanner = new Scanner(System.in);
 
