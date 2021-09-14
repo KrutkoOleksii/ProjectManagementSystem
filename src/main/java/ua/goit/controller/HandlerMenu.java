@@ -21,7 +21,7 @@ public abstract class HandlerMenu {
     }
 
     public static HandlerMenu of() {
-        return null;
+        return new HandlerException();
     }
 
 //    protected Pet getPetFromConsole() {
