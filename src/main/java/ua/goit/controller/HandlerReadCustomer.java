@@ -11,7 +11,7 @@ public class HandlerReadCustomer extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Customer customer = new CustomerService().readEntity(Customer.class, Long.getLong(command[2]));
+        Customer customer = new CustomerService().readEntity(Customer.class, Long.valueOf(command[2]));
         System.out.println(customer.toString());
     }
 

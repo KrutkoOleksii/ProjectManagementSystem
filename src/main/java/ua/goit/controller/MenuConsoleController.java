@@ -57,54 +57,54 @@ public class MenuConsoleController {
         String[] command = response.split("\\|");
         HandlerMenu.of().handle(command);
 
-        while (!"exit".equals(response)){
-            if ("help".equals(response)){
-                System.out.println(helpString);
-                response = scanner.next();
-                continue;
-            } else if ("mainmenu".equals(response)){
-                printNainMenu();
-                break;
-            }
-            String[] responseArray = response.split("\\|");
-            if (responseArray.length < 2) {
-                System.out.println("print correct string");
-                response = scanner.next();
-                continue;
-            }
-            String operation = responseArray[0];
-            String className = Character.toUpperCase(responseArray[1].charAt(0)) + responseArray[1].substring(1);
-            Class aClass = Class.forName("ua.goit.model."+className);
-            Long id = 0L;
-            if (("get".equals(operation) || "delete".equals(operation)) & responseArray.length < 3){
-                System.out.println("print correct string (with ID in third position)");
-                response = scanner.next();
-                continue;
-            } else if("get".equals(operation) || "delete".equals(operation)) id = Long.parseLong(responseArray[2]);
-
-            if        ("get".equals(operation)){
-                BaseEntity baseEntity = Factory.of(aClass).getOne(id);
-                System.out.println(baseEntity);
-            } else if ("delete".equals(operation)) {
-                Factory.of(aClass).deleteById(id);
-            } else if ("create".equals(operation)) {
-                Map<String,String> mapColumnField = Arrays.stream(aClass.getDeclaredFields())
-                        .filter(modelField -> !Modifier.isStatic(modelField.getModifiers()))
-                        .collect(Collectors.toMap(modelField -> getColumn(modelField), modelField -> modelField.getName()));
-                BaseEntity entity = getEntity(mapColumnField, aClass);
-                BaseEntity baseEntity = Factory.of(aClass).save(entity);
-                System.out.println(baseEntity);
-            } else if ("update".equals(operation)) {
-                Map<String,String> mapColumnField = Arrays.stream(aClass.getDeclaredFields())
-                        .filter(modelField -> !Modifier.isStatic(modelField.getModifiers()))
-                        .collect(Collectors.toMap(modelField -> getColumn(modelField), modelField -> modelField.getName()));
-                BaseEntity entity = getEntity(mapColumnField, aClass);
-                BaseEntity baseEntity = Factory.of(aClass).save(entity);
-                System.out.println(baseEntity);
-            }
-            response = scanner.next();
-        }
-        return;
+//        while (!"exit".equals(response)){
+//            if ("help".equals(response)){
+//                System.out.println(helpString);
+//                response = scanner.next();
+//                continue;
+//            } else if ("mainmenu".equals(response)){
+//                printNainMenu();
+//                break;
+//            }
+//            String[] responseArray = response.split("\\|");
+//            if (responseArray.length < 2) {
+//                System.out.println("print correct string");
+//                response = scanner.next();
+//                continue;
+//            }
+//            String operation = responseArray[0];
+//            String className = Character.toUpperCase(responseArray[1].charAt(0)) + responseArray[1].substring(1);
+//            Class aClass = Class.forName("ua.goit.model."+className);
+//            Long id = 0L;
+//            if (("get".equals(operation) || "delete".equals(operation)) & responseArray.length < 3){
+//                System.out.println("print correct string (with ID in third position)");
+//                response = scanner.next();
+//                continue;
+//            } else if("get".equals(operation) || "delete".equals(operation)) id = Long.parseLong(responseArray[2]);
+//
+//            if        ("get".equals(operation)){
+//                BaseEntity baseEntity = Factory.of(aClass).getOne(id);
+//                System.out.println(baseEntity);
+//            } else if ("delete".equals(operation)) {
+//                Factory.of(aClass).deleteById(id);
+//            } else if ("create".equals(operation)) {
+//                Map<String,String> mapColumnField = Arrays.stream(aClass.getDeclaredFields())
+//                        .filter(modelField -> !Modifier.isStatic(modelField.getModifiers()))
+//                        .collect(Collectors.toMap(modelField -> getColumn(modelField), modelField -> modelField.getName()));
+//                BaseEntity entity = getEntity(mapColumnField, aClass);
+//                BaseEntity baseEntity = Factory.of(aClass).save(entity);
+//                System.out.println(baseEntity);
+//            } else if ("update".equals(operation)) {
+//                Map<String,String> mapColumnField = Arrays.stream(aClass.getDeclaredFields())
+//                        .filter(modelField -> !Modifier.isStatic(modelField.getModifiers()))
+//                        .collect(Collectors.toMap(modelField -> getColumn(modelField), modelField -> modelField.getName()));
+//                BaseEntity entity = getEntity(mapColumnField, aClass);
+//                BaseEntity baseEntity = Factory.of(aClass).save(entity);
+//                System.out.println(baseEntity);
+//            }
+//            response = scanner.next();
+//        }
+//        return;
     }
 
     public static void showReports() {

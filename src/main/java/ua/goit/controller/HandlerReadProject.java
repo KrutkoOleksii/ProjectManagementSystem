@@ -11,7 +11,7 @@ public class HandlerReadProject extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Project project = new ProjectService().readEntity(Project.class, Long.getLong(command[2]));
+        Project project = new ProjectService().readEntity(Project.class, Long.valueOf(command[2]));
         System.out.println(project.toString());
     }
 

@@ -11,7 +11,7 @@ public class HandlerReadDeveloper extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Developer developer = new DeveloperService().readEntity(Developer.class, Long.getLong(command[2]));
+        Developer developer = new DeveloperService().readEntity(Developer.class, Long.valueOf(command[2]));
         System.out.println(developer.toString());
     }
 

@@ -1,8 +1,6 @@
 package ua.goit.controller;
 
-import ua.goit.model.Company;
 import ua.goit.model.Skill;
-import ua.goit.service.CompanyService;
 import ua.goit.service.SkillService;
 
 public class HandlerReadSkill extends HandlerMenu{
@@ -13,7 +11,7 @@ public class HandlerReadSkill extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Skill skill = new SkillService().readEntity(Skill.class, Long.getLong(command[2]));
+        Skill skill = new SkillService().readEntity(Skill.class, Long.valueOf(command[2]));
         System.out.println(skill.toString());
     }
 
