@@ -19,6 +19,7 @@ import java.util.stream.IntStream;
 
 public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Closeable, BaseRepository <ID,E>{
 
+    protected final String databaseSchemaName;
     protected final Connection connection;
 
     private final Class<E> modelClass;
@@ -33,7 +34,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
 
     @SneakyThrows
     public BaseRepositoryImpl(Class<E> modelClass) {
-        String databaseSchemaName = PropertiesLoader.getProperty("db.name");
+        databaseSchemaName = PropertiesLoader.getProperty("db.name");
         this.connection = DatabaseConnection.getInstance().getConnection();
         this.modelClass = modelClass;
         this.jacksonMapper = new ObjectMapper();

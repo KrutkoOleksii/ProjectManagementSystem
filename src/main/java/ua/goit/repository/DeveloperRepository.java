@@ -18,28 +18,28 @@ public class DeveloperRepository extends BaseRepositoryImpl<Long, Developer>{
         this.developerOfProjectPreparedStatement = connection.prepareStatement(
                 "SELECT" +
                         " developers.name" +
-                        " FROM hw2.developers" +
-                        " INNER JOIN hw2.developer_project" +
+                        " FROM "+databaseSchemaName+".developers" +
+                        " INNER JOIN "+databaseSchemaName+".developer_project" +
                         " ON developer_project.developer_id = developers.id" +
-                        " INNER JOIN hw2.projects" +
+                        " INNER JOIN "+databaseSchemaName+".projects" +
                         " ON developer_project.project_id = projects.id" +
                         " WHERE projects.id=?");
         this.developerWithLevelPreparedStatement = connection.prepareStatement(
                 "SELECT" +
                         " developers.name" +
-                        " FROM hw2.developers" +
-                        " INNER JOIN hw2.developer_skill" +
+                        " FROM "+databaseSchemaName+".developers" +
+                        " INNER JOIN "+databaseSchemaName+".developer_skill" +
                         " ON developer_skill.developer_id = developers.id" +
-                        " INNER JOIN hw2.skills" +
+                        " INNER JOIN "+databaseSchemaName+".skills" +
                         " ON developer_skill.skill_id = skills.id" +
                         " WHERE skills.skill_level='?'");
         this.developerWithSkillPreparedStatement = connection.prepareStatement(
                 "SELECT" +
                         " developers.name" +
-                        " FROM hw2.developers" +
-                        " INNER JOIN hw2.developer_skill" +
+                        " FROM "+databaseSchemaName+".developers" +
+                        " INNER JOIN "+databaseSchemaName+".developer_skill" +
                         " ON developer_skill.developer_id = developers.id" +
-                        " INNER JOIN hw2.skills" +
+                        " INNER JOIN "+databaseSchemaName+".skills" +
                         " ON developer_skill.skill_id = skills.id" +
                         " WHERE skills.name='?'");
     }

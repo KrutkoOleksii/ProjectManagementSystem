@@ -54,6 +54,8 @@ public class MenuConsoleController {
                         "    for exit:    exit";
         System.out.println(helpString);
         String response = scanner.next();
+        String[] command = response.split("\\|");
+        HandlerMenu.of().handle(command);
 
         while (!"exit".equals(response)){
             if ("help".equals(response)){
