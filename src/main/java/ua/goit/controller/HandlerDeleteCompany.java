@@ -16,6 +16,6 @@ public class HandlerDeleteCompany extends HandlerMenu{
 
     @Override
     protected boolean isApplicable(String[] command) {
-        return "delete".equals(command[0]) & "company".equals(command[2]);
+        return command.length == 3 && "delete".equals(command[0]) & "company".equals(command[1]);
     }
 }
