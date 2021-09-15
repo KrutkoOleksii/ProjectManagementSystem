@@ -32,7 +32,7 @@ public class DeveloperRepository extends BaseRepositoryImpl<Long, Developer>{
                         " ON developer_skill.developer_id = developers.id" +
                         " INNER JOIN "+databaseSchemaName+".skills" +
                         " ON developer_skill.skill_id = skills.id" +
-                        " WHERE skills.skill_level='?'");
+                        " WHERE skills.skill_level=?");
         this.developerWithSkillPreparedStatement = connection.prepareStatement(
                 "SELECT" +
                         " developers.name" +
@@ -41,7 +41,7 @@ public class DeveloperRepository extends BaseRepositoryImpl<Long, Developer>{
                         " ON developer_skill.developer_id = developers.id" +
                         " INNER JOIN "+databaseSchemaName+".skills" +
                         " ON developer_skill.skill_id = skills.id" +
-                        " WHERE skills.name='?'");
+                        " WHERE skills.name=?");
     }
 
     @SneakyThrows

@@ -1,7 +1,6 @@
 package ua.goit.controller;
 
-import ua.goit.model.Project;
-import ua.goit.repository.ProjectRepository;
+import ua.goit.service.ProjectService;
 
 public class HandlerQueryListOfProjects extends HandlerMenu{
 
@@ -11,12 +10,11 @@ public class HandlerQueryListOfProjects extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        ProjectRepository projectRepository = new ProjectRepository(Project.class);
-        System.out.println(projectRepository.listOfProjects());
+        System.out.println(new ProjectService().listOfProject());
     }
 
     @Override
     protected boolean isApplicable(String[] command) {
-        return command.length == 2 && "query".equalsIgnoreCase(command[0]) & "listofprojects".equalsIgnoreCase(command[1]);
+        return command.length == 2 && "query".equalsIgnoreCase(command[0]) & "ListOfProject".equalsIgnoreCase(command[1]);
     }
 }

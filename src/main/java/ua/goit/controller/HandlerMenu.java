@@ -25,7 +25,7 @@ public abstract class HandlerMenu {
                 new HandlerDeleteCompany(new HandlerDeleteCustomer(new HandlerDeleteDeveloper(new HandlerDeleteProject(new HandlerDeleteSkill(
                 new HandlerCreateCompany(new HandlerCreateCustomer(new HandlerCreateDeveloper(new HandlerCreateProject(new HandlerCreateSkill(
                 new HandlerUpdateCompany(new HandlerUpdateCustomer(new HandlerUpdateDeveloper(new HandlerUpdateProject(new HandlerUpdateSkill(
-                new HandlerQueryDeveloperOfProject(new HandlerQueryDeveloperWithSkill(new HandlerQueryDeveloperWithLevel(
+                new HandlerQueryDevelopersOfProject(new HandlerQueryDevelopersWithSkill(new HandlerQueryDevelopersWithLevel(
                 new HandlerQueryListOfProjects(new HandlerQuerySalaryOfProject(
                 new HandlerException()
                 )))))

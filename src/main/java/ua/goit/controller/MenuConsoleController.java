@@ -25,19 +25,25 @@ public class MenuConsoleController {
                         "    for UPDATE:  update|{table}\n" +
                         "    for DELETE:  delete|{table}|{id}\n" +
                 "print a formatted string for showing report:\n" +
-                        "    for 'Salary Of Project':     1|{projectId}\n" +
-                        "    for 'Developers Of Project': 2|{projectId}\n" +
-                        "    for 'Developers By Skill':   3|{skill}\n" +
-                        "    for 'Developers By Level':   4|{level}\n" +
-                        "    for 'Project List':          5\n" +
-                        "    for HELP:    help\n" +
-                        "    for EXIT:    exit";
+                        "    for 'Salary Of Project':     query|SalaryOfProject|{projectId}\n" +
+                        "    for 'Developers Of Project': query|DevelopersOfProject|{projectId}\n" +
+                        "    for 'Developers With Skill':   query|DevelopersWithSkill|{skill}\n" +
+                        "    for 'Developers With Level':   query|DevelopersWithLevel|{level}\n" +
+                        "    for 'Project List':          query|ListOfProject\n" +
+                "for HELP:    help\n" +
+                "for EXIT:    exit";
 
 //        System.out.println("Hello. Follow steps below, please. For exit tape 'exit'");
 //        String helpString = "Choose operation (input number) :\n 1. Operations with tables\n 2. Reports";
         System.out.println(helpString);
         String response = scanner.next();
-        while       (!"exit".equals(response)) {
+        while (!"exit".equals(response)) {
+
+            if ("help".equalsIgnoreCase(response)){
+                System.out.println(helpString);
+                response = scanner.next();
+                continue;
+            }
 //            if      ("1".equals(response)) {
 //                doingOperationsWithTables();
 //                break;
@@ -47,10 +53,8 @@ public class MenuConsoleController {
 //                break;
 //            }
 //            else response = scanner.next();
-
             String[] command = response.split("\\|");
             HandlerMenu.of().handle(command);
-
             response = scanner.next();
         }
     }
@@ -127,84 +131,84 @@ public class MenuConsoleController {
 //        return;
 //    }
 
-    public static void showReports() {
-        String helpString =
-                "print a formatted string for showing report:\n" +
-                        "    for 'Salary Of Project':     1|{projectId}\n" +
-                        "    for 'Developers Of Project': 2|{projectId}\n" +
-                        "    for 'Developers By Skill':   3|{skill}\n" +
-                        "    for 'Developers By Level':   4|{level}\n" +
-                        "    for 'Project List':          5\n" +
-                        "    for help:    help\n" +
-                        "    for menu:    mainmenu\n" +
-                        "    for exit:    exit";
-        System.out.println(helpString);
-        String response = scanner.next();
-        while (!"exit".equals(response)) {
-            if ("help".equals(response)) {
-                System.out.println(helpString);
-                response = scanner.next();
-                continue;
-            } else if ("mainmenu".equals(response)){
-                printNainMenu();
-                continue;
-            }
-            String[] responseArray = response.split("\\|");
-            if (responseArray.length < 2 & "1234".contains(responseArray[0])) {
-                System.out.println("print correct string");
-                response = scanner.next();
-                continue;
-            }
-            if ("1".equals(responseArray[0])){
-                ProjectRepository projectRepository = new ProjectRepository(Project.class);
-                System.out.println(projectRepository.salaryOfProject(Long.parseLong(responseArray[1])));
-//                Report report = new SalaryOfProject();
-//                System.out.println(report.getReport(Long.parseLong(responseArray[1])));
-            } else if ("2".equals(responseArray[0])) {
-                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
-                System.out.println(developerRepository.developerOfProject(Long.parseLong(responseArray[1])));
-//                Report report = new DevelopersOfProject();
-//                System.out.println(report.getReport(Long.parseLong(responseArray[1])));
-            } else if ("3".equals(responseArray[0])) {
-                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
-                System.out.println(developerRepository.developerWithSkill(responseArray[1]));
-//                Report report = new DevelopersWithSkill();
-//                System.out.println(report.getReport(responseArray[1]));
-            } else if ("4".equals(responseArray[0])) {
-                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
-                System.out.println(developerRepository.developerWithLevel(responseArray[1]));
-//                Report report = new DevelopersWithLevel();
-//                System.out.println(report.getReport(responseArray[1]));
-            } else if ("5".equals(responseArray[0])) {
-                ProjectRepository projectRepository = new ProjectRepository(Project.class);
-                System.out.println(projectRepository.listOfProjects());
-//                Report report = new ListOfProjects();
-//                System.out.println(report.getReport(""));
-            }
-            response = scanner.next();
-        }
-    }
+//    public static void showReports() {
+//        String helpString =
+//                "print a formatted string for showing report:\n" +
+//                        "    for 'Salary Of Project':     1|{projectId}\n" +
+//                        "    for 'Developers Of Project': 2|{projectId}\n" +
+//                        "    for 'Developers By Skill':   3|{skill}\n" +
+//                        "    for 'Developers By Level':   4|{level}\n" +
+//                        "    for 'Project List':          5\n" +
+//                        "    for help:    help\n" +
+//                        "    for menu:    mainmenu\n" +
+//                        "    for exit:    exit";
+//        System.out.println(helpString);
+//        String response = scanner.next();
+//        while (!"exit".equals(response)) {
+//            if ("help".equals(response)) {
+//                System.out.println(helpString);
+//                response = scanner.next();
+//                continue;
+//            } else if ("mainmenu".equals(response)){
+//                printNainMenu();
+//                continue;
+//            }
+//            String[] responseArray = response.split("\\|");
+//            if (responseArray.length < 2 & "1234".contains(responseArray[0])) {
+//                System.out.println("print correct string");
+//                response = scanner.next();
+//                continue;
+//            }
+//            if ("1".equals(responseArray[0])){
+//                ProjectRepository projectRepository = new ProjectRepository(Project.class);
+//                System.out.println(projectRepository.salaryOfProject(Long.parseLong(responseArray[1])));
+////                Report report = new SalaryOfProject();
+////                System.out.println(report.getReport(Long.parseLong(responseArray[1])));
+//            } else if ("2".equals(responseArray[0])) {
+//                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
+//                System.out.println(developerRepository.developerOfProject(Long.parseLong(responseArray[1])));
+////                Report report = new DevelopersOfProject();
+////                System.out.println(report.getReport(Long.parseLong(responseArray[1])));
+//            } else if ("3".equals(responseArray[0])) {
+//                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
+//                System.out.println(developerRepository.developerWithSkill(responseArray[1]));
+////                Report report = new DevelopersWithSkill();
+////                System.out.println(report.getReport(responseArray[1]));
+//            } else if ("4".equals(responseArray[0])) {
+//                DeveloperRepository developerRepository = new DeveloperRepository(Developer.class);
+//                System.out.println(developerRepository.developerWithLevel(responseArray[1]));
+////                Report report = new DevelopersWithLevel();
+////                System.out.println(report.getReport(responseArray[1]));
+//            } else if ("5".equals(responseArray[0])) {
+//                ProjectRepository projectRepository = new ProjectRepository(Project.class);
+//                System.out.println(projectRepository.listOfProjects());
+////                Report report = new ListOfProjects();
+////                System.out.println(report.getReport(""));
+//            }
+//            response = scanner.next();
+//        }
+//    }
 
-    private static String[] getArrayOfFields(String fields) {
-        System.out.println(String.format("Well, please input parameters in comma separated string: %s",fields));
-        String response = scanner.next();
-        return response.split(",");
-    }
+//    private static String[] getArrayOfFields(String fields) {
+//        System.out.println(String.format("Well, please input parameters in comma separated string: %s",fields));
+//        String response = scanner.next();
+//        return response.split(",");
+//    }
 
-    private static BaseEntity getEntity(Map<String,String> mapColumnField, Class modelClass){
-        Map<String,String> mapEntity = new HashMap<>();
-        for (Map.Entry<String,String> element : mapColumnField.entrySet()) {
-            String key = element.getValue();
-            System.out.println(String.format("input %s : ",key));
-            String response = scanner.next();
-            mapEntity.put(key,response);
-        }
-        ObjectMapper jacksonMapper = new ObjectMapper();
-        BaseEntity convertValue = (BaseEntity) jacksonMapper.convertValue(mapEntity, modelClass);
-        return convertValue;
-    }
-
-    private static String getColumn(Field modelField) {
-        return modelField.getAnnotationsByType(Column.class) == null ? modelField.getName() : modelField.getAnnotation(Column.class).name();
-    }
+//    private static BaseEntity getEntity(Map<String,String> mapColumnField, Class modelClass){
+//        Map<String,String> mapEntity = new HashMap<>();
+//        for (Map.Entry<String,String> element : mapColumnField.entrySet()) {
+//            String key = element.getValue();
+//            System.out.println(String.format("input %s : ",key));
+//            String response = scanner.next();
+//            mapEntity.put(key,response);
+//        }
+//        ObjectMapper jacksonMapper = new ObjectMapper();
+//        BaseEntity convertValue = (BaseEntity) jacksonMapper.convertValue(mapEntity, modelClass);
+//        return convertValue;
+//    }
+//
+//    private static String getColumn(Field modelField) {
+//        return modelField.getAnnotationsByType(Column.class) == null ? modelField.getName() : modelField.getAnnotation(Column.class).name();
+//    }
 }
