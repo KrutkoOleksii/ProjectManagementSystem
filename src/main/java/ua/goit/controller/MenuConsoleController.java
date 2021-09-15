@@ -1,61 +1,81 @@
 package ua.goit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import ua.goit.model.BaseEntity;
 import ua.goit.model.Developer;
 import ua.goit.model.Project;
 import ua.goit.repository.DeveloperRepository;
-import ua.goit.repository.Factory;
 import ua.goit.repository.ProjectRepository;
 
 import javax.persistence.Column;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class MenuConsoleController {
 
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void printNainMenu() {
-        System.out.println("Hello. Follow steps below, please. For exit tape 'exit'");
-        String helpString = "Choose operation (input number) :\n 1. Operations with tables\n 2. Reports";
-        System.out.println(helpString);
-        String response = scanner.next();
-        while       (!"exit".equals(response)) {
-            if      ("1".equals(response)) {
-                doingOperationsWithTables();
-                break;
-            }
-            else if ("2".equals(response)) {
-                showReports();
-                break;
-            }
-            else response = scanner.next();
-        }
-    }
-
-    @SneakyThrows
-    public static void doingOperationsWithTables() {
-
         String helpString =
                 "print a formatted string for operations with tables (company, customer, developer, project, skill):\n" +
                         "    for CREATE:  create|{table}\n" +
                         "    for READ:    get|{table}|{id}\n" +
                         "    for UPDATE:  update|{table}\n" +
                         "    for DELETE:  delete|{table}|{id}\n" +
-                        "    for help:    help\n" +
-                        "    for menu:    mainmenu\n" +
-                        "    for exit:    exit";
+                "print a formatted string for showing report:\n" +
+                        "    for 'Salary Of Project':     1|{projectId}\n" +
+                        "    for 'Developers Of Project': 2|{projectId}\n" +
+                        "    for 'Developers By Skill':   3|{skill}\n" +
+                        "    for 'Developers By Level':   4|{level}\n" +
+                        "    for 'Project List':          5\n" +
+                        "    for HELP:    help\n" +
+                        "    for EXIT:    exit";
+
+//        System.out.println("Hello. Follow steps below, please. For exit tape 'exit'");
+//        String helpString = "Choose operation (input number) :\n 1. Operations with tables\n 2. Reports";
         System.out.println(helpString);
         String response = scanner.next();
-        String[] command = response.split("\\|");
-        HandlerMenu.of().handle(command);
+        while       (!"exit".equals(response)) {
+//            if      ("1".equals(response)) {
+//                doingOperationsWithTables();
+//                break;
+//            }
+//            else if ("2".equals(response)) {
+//                showReports();
+//                break;
+//            }
+//            else response = scanner.next();
+
+            String[] command = response.split("\\|");
+            HandlerMenu.of().handle(command);
+
+            response = scanner.next();
+        }
+    }
+
+//    @SneakyThrows
+//    public static void doingOperationsWithTables() {
+//
+//        String helpString =
+//                "print a formatted string for operations with tables (company, customer, developer, project, skill):\n" +
+//                        "    for CREATE:  create|{table}\n" +
+//                        "    for READ:    get|{table}|{id}\n" +
+//                        "    for UPDATE:  update|{table}\n" +
+//                        "    for DELETE:  delete|{table}|{id}\n" +
+//                "print a formatted string for showing report:\n" +
+//                        "    for 'Salary Of Project':     1|{projectId}\n" +
+//                        "    for 'Developers Of Project': 2|{projectId}\n" +
+//                        "    for 'Developers By Skill':   3|{skill}\n" +
+//                        "    for 'Developers By Level':   4|{level}\n" +
+//                        "    for 'Project List':          5\n" +
+//                        "    for HELP:    help\n" +
+//                        "    for EXIT:    exit";
+//        System.out.println(helpString);
+//        String response = scanner.next();
+//        String[] command = response.split("\\|");
+//        HandlerMenu.of().handle(command);
 
 //        while (!"exit".equals(response)){
 //            if ("help".equals(response)){
@@ -105,7 +125,7 @@ public class MenuConsoleController {
 //            response = scanner.next();
 //        }
 //        return;
-    }
+//    }
 
     public static void showReports() {
         String helpString =
@@ -157,7 +177,7 @@ public class MenuConsoleController {
 //                System.out.println(report.getReport(responseArray[1]));
             } else if ("5".equals(responseArray[0])) {
                 ProjectRepository projectRepository = new ProjectRepository(Project.class);
-                System.out.println(projectRepository.listOfProject());
+                System.out.println(projectRepository.listOfProjects());
 //                Report report = new ListOfProjects();
 //                System.out.println(report.getReport(""));
             }

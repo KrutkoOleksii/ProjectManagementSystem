@@ -39,7 +39,7 @@ public class ProjectRepository extends BaseRepositoryImpl<Long, Project>{
     }
 
     @SneakyThrows
-    public String listOfProject(){
+    public String listOfProjects(){
         ResultSet resultSet = listOfProjectPreparedStatement.executeQuery();
         return printListOfProject(resultSet);
     }
