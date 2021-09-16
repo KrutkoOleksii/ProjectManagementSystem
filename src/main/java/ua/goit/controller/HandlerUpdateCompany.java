@@ -14,14 +14,12 @@ public class HandlerUpdateCompany extends HandlerMenu{
         System.out.println("Company for update is:\n" + company.toString());
         System.out.println("enter the new parameters of the company:\n" +
                 "{name}|{code}");
-        //String next = scanner.next();
         String[] split = scanner.next().split("\\|");
         Company updatedCompany = Company.builder()
                 .id(Long.valueOf(command[2]))
                 .name(split[0])
                 .code(split[1])
                 .build();
-//        new CompanyService().updateEntity(Company.class, updatedCompany).toString();
         System.out.println("updated company: " + new CompanyService().updateEntity(Company.class, updatedCompany).toString());
     }
 

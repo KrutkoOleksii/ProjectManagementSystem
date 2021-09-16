@@ -90,10 +90,10 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
             declaredField.setAccessible(true);
             preparedStatement.setObject(count++, declaredField.get(e));
         }
-        preparedStatement.executeUpdate();
+        int executeUpdate = preparedStatement.executeUpdate();
         ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-        generatedKeys.next();
-        return findById((ID) generatedKeys.getObject(1)).get();
+        if (generatedKeys.next()) return findById((ID) generatedKeys.getObject(1)).get();
+        return findById(e.getId()).get();
     }
 
     @SneakyThrows
@@ -119,6 +119,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
             return executeStatement(createPreparedStatement, e);
         } else {
             updatePreparedStatement.setObject(mapColumnField.size()+1,e.getId());
+            E statement = executeStatement(updatePreparedStatement, e);
             return executeStatement(updatePreparedStatement, e);
         }
     }
