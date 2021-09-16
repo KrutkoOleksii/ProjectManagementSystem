@@ -40,18 +40,16 @@ public class ProjectRepository extends BaseRepositoryImpl<Long, Project>{
 
     @SneakyThrows
     public String listOfProjects(){
-        ResultSet resultSet = listOfProjectPreparedStatement.executeQuery();
-        return printListOfProject(resultSet);
+        return stringListOfProject(listOfProjectPreparedStatement.executeQuery());
     }
     @SneakyThrows
     public String salaryOfProject(Long id){
         salaryOfProjectPreparedStatement.setLong(1, id);
-        ResultSet resultSet = salaryOfProjectPreparedStatement.executeQuery();
-        return printSalaryOfProject(resultSet, id);
+        return stringSalaryOfProject(salaryOfProjectPreparedStatement.executeQuery(), id);
     }
 
     @SneakyThrows
-    protected String printListOfProject(ResultSet resultSet) {
+    protected String stringListOfProject(ResultSet resultSet) {
         String result = ("*** All projects: (startDate - projectName - countOfDevs)\n");
         while (resultSet.next()){
             result = String.join("",
@@ -65,7 +63,7 @@ public class ProjectRepository extends BaseRepositoryImpl<Long, Project>{
         return result;
     }
     @SneakyThrows
-    protected String printSalaryOfProject(ResultSet resultSet, Long id) {
+    protected String stringSalaryOfProject(ResultSet resultSet, Long id) {
         while (resultSet.next()){
             return String.format("Salary of project %s : %s",
                     resultSet.getString("projects.name"),

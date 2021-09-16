@@ -47,26 +47,23 @@ public class DeveloperRepository extends BaseRepositoryImpl<Long, Developer>{
     @SneakyThrows
     public String developerOfProject(Long id){
         developerOfProjectPreparedStatement.setLong(1, id);
-        ResultSet resultSet = developerOfProjectPreparedStatement.executeQuery();
-        return printDeveloperOfProject(resultSet, id);
+        return stringDeveloperOfProject(developerOfProjectPreparedStatement.executeQuery(), id);
     }
 
     @SneakyThrows
     public String developerWithLevel(String level){
         developerWithLevelPreparedStatement.setString(1, level);
-        ResultSet resultSet = developerWithLevelPreparedStatement.executeQuery();
-        return printDeveloperWithLevel(resultSet, level);
+        return stringDeveloperWithLevel(developerWithLevelPreparedStatement.executeQuery(), level);
     }
 
     @SneakyThrows
     public String developerWithSkill(String skill){
         developerWithSkillPreparedStatement.setString(1, skill);
-        ResultSet resultSet = developerWithSkillPreparedStatement.executeQuery();
-        return printDeveloperWithSkill(resultSet, skill);
+        return stringDeveloperWithSkill(developerWithSkillPreparedStatement.executeQuery(), skill);
     }
 
     @SneakyThrows
-    private String printDeveloperOfProject(ResultSet resultSet, Long id) {
+    private String stringDeveloperOfProject(ResultSet resultSet, Long id) {
         String result = String.format("Developer of project with id = %s:\n",id);
         while (resultSet.next()){
             result = String.join("",result, resultSet.getString("developers.name"),"\n");
@@ -74,7 +71,7 @@ public class DeveloperRepository extends BaseRepositoryImpl<Long, Developer>{
         return result;
     }
     @SneakyThrows
-    private String printDeveloperWithLevel(ResultSet resultSet, String level) {
+    private String stringDeveloperWithLevel(ResultSet resultSet, String level) {
         String result = String.format("*** Developers with level '%s':\n", level);
         while (resultSet.next()){
             result = String.join("", result, resultSet.getString("developers.name"),"\n");
@@ -82,7 +79,7 @@ public class DeveloperRepository extends BaseRepositoryImpl<Long, Developer>{
         return result;
     }
     @SneakyThrows
-    private String printDeveloperWithSkill(ResultSet resultSet, String skill) {
+    private String stringDeveloperWithSkill(ResultSet resultSet, String skill) {
         String result = String.format("*** Developers with skill '%s':\n", skill);
         while (resultSet.next()){
             result = String.join("", result, resultSet.getString("developers.name"),"\n");
