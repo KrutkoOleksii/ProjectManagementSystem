@@ -19,19 +19,19 @@ public class ProjectRepository extends BaseRepositoryImpl<Long, Project>{
                         " start_date," +
                         " projects.name," +
                         " COUNT(developers.name) AS count_of_devs" +
-                        " FROM hw2.projects" +
-                        " INNER JOIN hw2.developer_project" +
+                        " FROM "+databaseSchemaName+".projects" +
+                        " INNER JOIN "+databaseSchemaName+".developer_project" +
                         " ON developer_project.project_id = projects.id" +
-                        " INNER JOIN hw2.developers" +
+                        " INNER JOIN "+databaseSchemaName+".developers" +
                         " ON developer_project.developer_id = developers.id" +
                         " GROUP BY projects.name,start_date"
         );
         this.salaryOfProjectPreparedStatement = connection.prepareStatement(
                 "SELECT projects.name, sum(salary) as salary " +
-                        " FROM hw2.developers " +
-                        " INNER JOIN hw2.developer_project " +
+                        " FROM "+databaseSchemaName+".developers " +
+                        " INNER JOIN "+databaseSchemaName+".developer_project " +
                         " ON developer_project.developer_id = developers.id " +
-                        " INNER JOIN hw2.projects " +
+                        " INNER JOIN "+databaseSchemaName+".projects " +
                         " ON developer_project.project_id = projects.id " +
                         " WHERE projects.id=?" +
                         " GROUP BY projects.name"
