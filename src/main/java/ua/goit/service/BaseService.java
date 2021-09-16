@@ -3,6 +3,8 @@ package ua.goit.service;
 import ua.goit.model.BaseEntity;
 import ua.goit.repository.Factory;
 
+import java.util.Optional;
+
 public abstract class BaseService <ID, E extends BaseEntity<ID>> {
 
     public E createEntity(Class<E> aClass, E e) {
@@ -19,5 +21,9 @@ public abstract class BaseService <ID, E extends BaseEntity<ID>> {
 
     public void deleteEntity(Class<E> aClass, ID id) {
         Factory.of(aClass).deleteById(id);
+    }
+
+    public Optional<E> findById(Class<E> aClass, ID id) {
+        return Factory.of(aClass).findById(id);
     }
 }
