@@ -45,7 +45,7 @@ public class ProjectRepository extends BaseRepositoryImpl<Long, Project>{
     @SneakyThrows
     public String salaryOfProject(Long id){
         salaryOfProjectPreparedStatement.setLong(1, id);
-        return stringSalaryOfProject(salaryOfProjectPreparedStatement.executeQuery(), id);
+        return stringSalaryOfProject(salaryOfProjectPreparedStatement.executeQuery());
     }
 
     @SneakyThrows
@@ -63,7 +63,7 @@ public class ProjectRepository extends BaseRepositoryImpl<Long, Project>{
         return result;
     }
     @SneakyThrows
-    protected String stringSalaryOfProject(ResultSet resultSet, Long id) {
+    protected String stringSalaryOfProject(ResultSet resultSet) {
         while (resultSet.next()){
             return String.format("Salary of project %s : %s",
                     resultSet.getString("projects.name"),
