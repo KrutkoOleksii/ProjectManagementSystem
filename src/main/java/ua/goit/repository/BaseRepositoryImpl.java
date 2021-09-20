@@ -19,7 +19,8 @@ import java.util.stream.IntStream;
 
 public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Closeable, BaseRepository <ID,E>{
 
-    private final Connection connection;
+    protected final String databaseSchemaName;
+    protected final Connection connection;
 
     private final Class<E> modelClass;
     private final ObjectMapper jacksonMapper;
@@ -33,7 +34,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
 
     @SneakyThrows
     public BaseRepositoryImpl(Class<E> modelClass) {
-        String databaseSchemaName = PropertiesLoader.getProperty("db.name");
+        databaseSchemaName = PropertiesLoader.getProperty("db.name");
         this.connection = DatabaseConnection.getInstance().getConnection();
         this.modelClass = modelClass;
         this.jacksonMapper = new ObjectMapper();
@@ -51,6 +52,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
         String fieldsForCreate = mapColumnField.keySet().stream().collect(Collectors.joining(","));
         String fieldsForUpdate = mapColumnField.keySet().stream().map(p -> p+"=?").collect(Collectors.joining(","));
         String table = databaseSchemaName +"."+tableName;
+
         this.findAllPreparedStatement = connection.prepareStatement(
                 "SELECT * FROM " + table, generatedColumns);
         this.findByIdPreparedStatement = connection.prepareStatement(
@@ -90,8 +92,8 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
         }
         preparedStatement.executeUpdate();
         ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-        generatedKeys.next();
-        return findById((ID) generatedKeys.getObject(1)).get();
+        if (generatedKeys.next()) return findById((ID) generatedKeys.getObject(1)).get();
+        return findById(e.getId()).get();
     }
 
     @SneakyThrows
@@ -110,10 +112,6 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
         return parse(findAllPreparedStatement.executeQuery());
     }
 
-    //@Override
-    public void deleteAll() {
-    }
-
     @SneakyThrows
     @Override
     public E save(E e) {
@@ -121,13 +119,10 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
             return executeStatement(createPreparedStatement, e);
         } else {
             updatePreparedStatement.setObject(mapColumnField.size()+1,e.getId());
+            E statement = executeStatement(updatePreparedStatement, e);
             return executeStatement(updatePreparedStatement, e);
         }
     }
-
-//    //@Override
-//    public void update(ID id, E e) {
-//    }
 
     @Override
     public E getOne(ID id) {

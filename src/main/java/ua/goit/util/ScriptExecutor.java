@@ -52,5 +52,4 @@ public class ScriptExecutor {
         return Integer.valueOf(nameWithoutPackage.split("_")[0]);
     }
 
-
 }

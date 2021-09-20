@@ -11,8 +11,6 @@ public interface BaseRepository <ID, E extends BaseEntity<ID>> {
 
     List<E> findAll();
 
-    //void deleteAll();
-
     E save(E e);
 
     E getOne(ID id);
