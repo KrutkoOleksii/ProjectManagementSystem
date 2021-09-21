@@ -16,13 +16,12 @@ public class HandlerUpdateSkill extends HandlerMenu{
                 "{name}|{level}");
         String next = scanner.next();
         String[] split = next.split("\\|");
-        Skill.builder()
+        Skill updatedSkill = Skill.builder()
                 .id(Long.valueOf(command[2]))
                 .name(split[0])
                 .skillLevel(split[1])
                 .build();
-        Skill updateSkill = new SkillService().updateEntity(Skill.class, skill);
-        System.out.println("updated skill: " + updateSkill.toString());
+        System.out.println("updated skill: " + new SkillService().updateEntity(Skill.class, updatedSkill).toString());
     }
 
     @Override

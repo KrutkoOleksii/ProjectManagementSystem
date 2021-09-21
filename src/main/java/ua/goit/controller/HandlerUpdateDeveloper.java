@@ -25,7 +25,7 @@ public class HandlerUpdateDeveloper extends HandlerMenu{
             System.out.println("No one company with id = " + companyId + "\nenter another id company:");
             companyId = scanner.nextLong();
         }
-        Developer.builder()
+        Developer updatedDeveloper = Developer.builder()
                 .id(Long.valueOf(command[2]))
                 .name(split[0])
                 .gender(split[1])
@@ -33,8 +33,7 @@ public class HandlerUpdateDeveloper extends HandlerMenu{
                 .salary(Integer.valueOf(split[3]))
                 .companyId(companyId)
                 .build();
-        Developer updateDeveloper = new DeveloperService().updateEntity(Developer.class, developer);
-        System.out.println("updated developer: " + updateDeveloper.toString());
+        System.out.println("updated developer: " + new DeveloperService().updateEntity(Developer.class, updatedDeveloper).toString());
     }
 
     @Override

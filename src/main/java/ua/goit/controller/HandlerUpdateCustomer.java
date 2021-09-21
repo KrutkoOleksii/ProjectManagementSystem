@@ -16,13 +16,12 @@ public class HandlerUpdateCustomer extends HandlerMenu{
                 "{name}|{code}");
         String next = scanner.next();
         String[] split = next.split("\\|");
-        Customer.builder()
+        Customer updatedCustomer = Customer.builder()
                 .id(Long.valueOf(command[2]))
                 .name(split[0])
                 .code(split[1])
                 .build();
-        Customer updateCustomer = new CustomerService().updateEntity(Customer.class, customer);
-        System.out.println("updated customer: " + updateCustomer.toString());
+        System.out.println("updated customer: " + new CustomerService().updateEntity(Customer.class, updatedCustomer).toString());
     }
 
     @Override

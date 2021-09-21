@@ -19,8 +19,8 @@ import java.util.stream.IntStream;
 
 public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Closeable, BaseRepository <ID,E>{
 
-    protected final String databaseSchemaName;
     protected final Connection connection;
+    protected final String databaseSchemaName;
 
     private final Class<E> modelClass;
     private final ObjectMapper jacksonMapper;
@@ -34,7 +34,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
 
     @SneakyThrows
     public BaseRepositoryImpl(Class<E> modelClass) {
-        databaseSchemaName = PropertiesLoader.getProperty("db.name");
+        this.databaseSchemaName = PropertiesLoader.getProperty("db.name");
         this.connection = DatabaseConnection.getInstance().getConnection();
         this.modelClass = modelClass;
         this.jacksonMapper = new ObjectMapper();
@@ -46,12 +46,12 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
                 .filter(modelField -> !Modifier.isStatic(modelField.getModifiers()))
                 .filter(modelField -> modelField.getAnnotation(Id.class) != null)
                 .findAny().orElseThrow(() -> new RuntimeException("Entity must have id")))};
-        String tableName = modelClass.getAnnotation(Entity.class) != null
-                ? modelClass.getAnnotation(Entity.class).name() : modelClass.getSimpleName().toLowerCase();
         String countValues = IntStream.range(0, mapColumnField.size()).mapToObj(p -> "?").collect(Collectors.joining(","));
         String fieldsForCreate = mapColumnField.keySet().stream().collect(Collectors.joining(","));
         String fieldsForUpdate = mapColumnField.keySet().stream().map(p -> p+"=?").collect(Collectors.joining(","));
-        String table = databaseSchemaName +"."+tableName;
+        String table = PropertiesLoader.getProperty("db.name") + "."
+                + (modelClass.getAnnotation(Entity.class) != null
+                ? modelClass.getAnnotation(Entity.class).name() : modelClass.getSimpleName().toLowerCase());
 
         this.findAllPreparedStatement = connection.prepareStatement(
                 "SELECT * FROM " + table, generatedColumns);
@@ -66,7 +66,7 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
     }
 
     private  String getColumn(Field modelField) {
-        return modelField.getAnnotationsByType(Column.class) == null ? modelField.getName() : modelField.getAnnotation(Column.class).name();
+        return modelField.getAnnotationsByType(Column.class).length == 0 ? modelField.getName() : modelField.getAnnotation(Column.class).name();
     }
 
     @SneakyThrows

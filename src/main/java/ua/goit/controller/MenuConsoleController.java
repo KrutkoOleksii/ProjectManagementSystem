@@ -11,14 +11,14 @@ public class MenuConsoleController {
                 "print a formatted string for operations with tables (company, customer, developer, project, skill):\n" +
                         "    for CREATE:  create|{table}\n" +
                         "    for READ:    get|{table}|{id}\n" +
-                        "    for UPDATE:  update|{table}\n" +
+                        "    for UPDATE:  update|{table}|{id}\n" +
                         "    for DELETE:  delete|{table}|{id}\n" +
                 "print a formatted string for showing report:\n" +
-                        "    for 'Salary Of Project':     query|SalaryOfProject|{projectId}\n" +
-                        "    for 'Developers Of Project': query|DevelopersOfProject|{projectId}\n" +
-                        "    for 'Developers With Skill':   query|DevelopersWithSkill|{skill}\n" +
-                        "    for 'Developers With Level':   query|DevelopersWithLevel|{level}\n" +
-                        "    for 'Project List':          query|ListOfProject\n" +
+                        "    for 'Salary Of Project':      query|SalaryOfProject|{projectId}\n" +
+                        "    for 'Developers Of Project':  query|DevelopersOfProject|{projectId}\n" +
+                        "    for 'Developers With Skill':  query|DevelopersWithSkill|{skill}\n" +
+                        "    for 'Developers With Level':  query|DevelopersWithLevel|{level}\n" +
+                        "    for 'Project List':           query|ListOfProject\n" +
                 "for HELP:    help\n" +
                 "for EXIT:    exit";
         System.out.println(helpString);

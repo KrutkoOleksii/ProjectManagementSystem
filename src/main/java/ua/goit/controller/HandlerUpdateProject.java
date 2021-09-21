@@ -16,7 +16,7 @@ public class HandlerUpdateProject extends HandlerMenu{
                 "{name}|{cost}|{startDate}|{companyId}|{customerId}");
         String next = scanner.next();
         String[] split = next.split("\\|");
-        Project.builder()
+        Project updatedProject = Project.builder()
                 .id(Long.valueOf(command[2]))
                 .name(split[0])
                 .cost(Integer.valueOf(split[1]))
@@ -24,8 +24,7 @@ public class HandlerUpdateProject extends HandlerMenu{
                 .companyId(Long.valueOf(split[3]))
                 .customerId(Long.valueOf(split[4]))
                 .build();
-        Project updateProject = new ProjectService().updateEntity(Project.class, project);
-        System.out.println("updated project: " + updateProject.toString());
+        System.out.println("updated project: " + new ProjectService().updateEntity(Project.class, updatedProject).toString());
     }
 
     @Override
