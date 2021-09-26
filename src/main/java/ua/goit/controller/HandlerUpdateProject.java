@@ -37,8 +37,8 @@ public class HandlerUpdateProject extends HandlerMenu{
                 .name(split[0])
                 .cost(Integer.valueOf(split[1]))
                 .startDate(split[2])
-                .companyId(Long.valueOf(companyId))
-                .customerId(Long.valueOf(customerId))
+                .companyId(companyId)
+                .customerId(customerId)
                 .build();
         System.out.println("updated project: " + new ProjectService().updateEntity(Project.class, updatedProject).toString());
     }

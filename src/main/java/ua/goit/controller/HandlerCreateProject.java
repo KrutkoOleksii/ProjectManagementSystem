@@ -23,7 +23,7 @@ public class HandlerCreateProject extends HandlerMenu{
 
     @Override
     protected boolean isApplicable(String[] command) {
-        return command.length == 2 && "create".equals(command[0]) & "company".equals(command[1]);
+        return command.length == 2 && "create".equals(command[0]) & "project".equals(command[1]);
     }
 
     protected Project getNewProject() {

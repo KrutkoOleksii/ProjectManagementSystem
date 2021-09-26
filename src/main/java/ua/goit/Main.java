@@ -1,6 +1,7 @@
 package ua.goit;
 
 import ua.goit.controller.MenuConsoleController;
+import ua.goit.util.ScriptExecutor;
 
 import java.util.Scanner;
 
@@ -9,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         // use for database initialization
-        //ScriptExecutor.start();
+        ScriptExecutor.start();
         MenuConsoleController.printNainMenu();
     }
 }
