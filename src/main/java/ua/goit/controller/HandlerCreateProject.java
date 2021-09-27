@@ -47,7 +47,7 @@ public class HandlerCreateProject extends HandlerMenu{
         }
         return Project.builder()
                 .name(split[0])
-                .cost(Integer.valueOf(split[1]))
+                .cost(HandlerNumeric.getInteger(split[1]))
                 .startDate(split[2])
                 .companyId(companyId)
                 .customerId(customerId)
