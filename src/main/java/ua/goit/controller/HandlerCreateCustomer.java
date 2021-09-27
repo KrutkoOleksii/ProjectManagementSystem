@@ -12,7 +12,7 @@ public class HandlerCreateCustomer extends HandlerMenu{
     protected void apply(String[] command) {
         Customer newCustomer = getNewCustomer();
         Customer customer = new CustomerService().createEntity(Customer.class, newCustomer);
-        System.out.println("new company: " + customer.toString());
+        System.out.println("new customer: " + customer.toString());
     }
 
     @Override

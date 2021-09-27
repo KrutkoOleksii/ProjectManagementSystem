@@ -14,7 +14,7 @@ public class HandlerUpdateDeveloper extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Developer developer = new DeveloperService().readEntity(Developer.class, Long.valueOf(command[2]));
+        Developer developer = new DeveloperService().readEntity(Developer.class, HandlerNumeric.getLong(command[2]));
         System.out.println("Developer for update is:\n" + developer.toString());
         System.out.println("enter the new parameters of the developer:\n" +
                 "{name}|{gender}|{age}|{salary}|{companyId}");
@@ -23,17 +23,17 @@ public class HandlerUpdateDeveloper extends HandlerMenu{
             System.out.println("Parameters is not enough. Enter correct number of parameters - 5");
             split = scanner.next().split("\\|");
         }
-        Long companyId = Long.valueOf(split[4]);
+        Long companyId = HandlerNumeric.getLong(split[4]);
         while (Optional.empty().equals(new CompanyService().findById(Company.class, companyId))) {
             System.out.println("No one company with id = " + companyId + "\nenter another id company:");
             companyId = scanner.nextLong();
         }
         Developer updatedDeveloper = Developer.builder()
-                .id(Long.valueOf(command[2]))
+                .id(HandlerNumeric.getLong(command[2]))
                 .name(split[0])
                 .gender(split[1])
-                .age(Integer.valueOf(split[2]))
-                .salary(Integer.valueOf(split[3]))
+                .age(HandlerNumeric.getInteger(split[2]))
+                .salary(HandlerNumeric.getInteger(split[3]))
                 .companyId(companyId)
                 .build();
         System.out.println("updated developer: " + new DeveloperService().updateEntity(Developer.class, updatedDeveloper).toString());

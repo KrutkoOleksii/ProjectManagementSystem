@@ -10,7 +10,7 @@ public class HandlerUpdateCustomer extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Customer customer = new CustomerService().readEntity(Customer.class, Long.valueOf(command[2]));
+        Customer customer = new CustomerService().readEntity(Customer.class, HandlerNumeric.getLong(command[2]));
         System.out.println("Customer for update is:\n" + customer.toString());
         System.out.println("enter the new parameters of the customer:\n" +
                 "{name}|{code}");
@@ -20,7 +20,7 @@ public class HandlerUpdateCustomer extends HandlerMenu{
             split = scanner.next().split("\\|");
         }
         Customer updatedCustomer = Customer.builder()
-                .id(Long.valueOf(command[2]))
+                .id(HandlerNumeric.getLong(command[2]))
                 .name(split[0])
                 .code(split[1])
                 .build();

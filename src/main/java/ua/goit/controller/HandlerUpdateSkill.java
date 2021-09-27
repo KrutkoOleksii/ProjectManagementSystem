@@ -10,7 +10,7 @@ public class HandlerUpdateSkill extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Skill skill = new SkillService().readEntity(Skill.class, Long.valueOf(command[2]));
+        Skill skill = new SkillService().readEntity(Skill.class, HandlerNumeric.getLong(command[2]));
         System.out.println("Skill for update is:\n" + skill.toString());
         System.out.println("enter the new parameters of the skill:\n" +
                 "{name}|{level}");
@@ -20,7 +20,7 @@ public class HandlerUpdateSkill extends HandlerMenu{
             split = scanner.next().split("\\|");
         }
         Skill updatedSkill = Skill.builder()
-                .id(Long.valueOf(command[2]))
+                .id(HandlerNumeric.getLong(command[2]))
                 .name(split[0])
                 .skillLevel(split[1])
                 .build();

@@ -35,12 +35,12 @@ public class HandlerCreateProject extends HandlerMenu{
             System.out.println("Parameters is not enough. Enter correct number of parameters - 5");
             split = scanner.next().split("\\|");
         }
-        Long companyId = Long.valueOf(split[3]);
+        Long companyId = HandlerNumeric.getLong(split[3]);
         while (Optional.empty().equals(new CompanyService().findById(Company.class, companyId))) {
             System.out.println("No one company with id = " + companyId + "\nenter another id company:");
             companyId = scanner.nextLong();
         }
-        Long customerId = Long.valueOf(split[4]);
+        Long customerId = HandlerNumeric.getLong(split[4]);
         while (Optional.empty().equals(new CustomerService().findById(Customer.class, customerId))) {
             System.out.println("No one customer with id = " + customerId + "\nenter another id customer:");
             customerId = scanner.nextLong();
