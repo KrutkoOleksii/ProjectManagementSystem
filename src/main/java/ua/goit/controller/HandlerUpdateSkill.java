@@ -14,8 +14,11 @@ public class HandlerUpdateSkill extends HandlerMenu{
         System.out.println("Skill for update is:\n" + skill.toString());
         System.out.println("enter the new parameters of the skill:\n" +
                 "{name}|{level}");
-        String next = scanner.next();
-        String[] split = next.split("\\|");
+        String[] split = scanner.next().split("\\|");
+        while (split.length < 2) {
+            System.out.println("Parameters is not enough. Enter correct number of parameters - 2");
+            split = scanner.next().split("\\|");
+        }
         Skill updatedSkill = Skill.builder()
                 .id(Long.valueOf(command[2]))
                 .name(split[0])

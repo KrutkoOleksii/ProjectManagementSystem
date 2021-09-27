@@ -15,6 +15,10 @@ public class HandlerUpdateCompany extends HandlerMenu{
         System.out.println("enter the new parameters of the company:\n" +
                 "{name}|{code}");
         String[] split = scanner.next().split("\\|");
+        while (split.length < 2) {
+            System.out.println("Parameters is not enough. Enter correct number of parameters - 2");
+            split = scanner.next().split("\\|");
+        }
         Company updatedCompany = Company.builder()
                 .id(Long.valueOf(command[2]))
                 .name(split[0])

@@ -30,8 +30,11 @@ public class HandlerCreateProject extends HandlerMenu{
         System.out.println("enter the parameters of the new project:\n" +
                 "{name}|{cost}|{startDate}|{companyId}|{customerId}\n" +
                 "( e.g. Alpha|1_000_000|2021-09-09|3|1)");
-        String next = scanner.next();
-        String[] split = next.split("\\|");
+        String[] split = scanner.next().split("\\|");
+        while (split.length < 5) {
+            System.out.println("Parameters is not enough. Enter correct number of parameters - 5");
+            split = scanner.next().split("\\|");
+        }
         Long companyId = Long.valueOf(split[3]);
         while (Optional.empty().equals(new CompanyService().findById(Company.class, companyId))) {
             System.out.println("No one company with id = " + companyId + "\nenter another id company:");
