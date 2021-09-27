@@ -11,7 +11,8 @@ public class HandlerDeleteDeveloper extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        new DeveloperService().deleteEntity(Developer.class, Long.valueOf(command[2]));
+        Developer developer = new DeveloperService().deleteEntity(Developer.class, Long.valueOf(command[2]));
+        System.out.println("deleted developer: " + developer);
     }
 
     @Override

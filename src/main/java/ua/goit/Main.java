@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         // use for database initialization
-        //ScriptExecutor.start();
+        ScriptExecutor.start();
         MenuConsoleController.printNainMenu();
     }
 }

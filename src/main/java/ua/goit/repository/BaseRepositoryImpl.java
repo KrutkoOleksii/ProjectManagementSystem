@@ -142,9 +142,11 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
 
     @SneakyThrows
     @Override
-    public void deleteById(ID id) {
+    public E deleteById(ID id) {
+        E e = getOne(id);
         deletePreparedStatement.setObject(1,id);
         deletePreparedStatement.executeUpdate();
+        return e;
     }
 
     @SneakyThrows

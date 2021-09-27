@@ -19,8 +19,8 @@ public abstract class BaseService <ID, E extends BaseEntity<ID>> {
         return Factory.of(aClass).save(e);
     }
 
-    public void deleteEntity(Class<E> aClass, ID id) {
-        Factory.of(aClass).deleteById(id);
+    public E deleteEntity(Class<E> aClass, ID id) {
+        return Factory.of(aClass).deleteById(id);
     }
 
     public Optional<E> findById(Class<E> aClass, ID id) {

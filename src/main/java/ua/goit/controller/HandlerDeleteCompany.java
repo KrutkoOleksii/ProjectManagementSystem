@@ -11,7 +11,8 @@ public class HandlerDeleteCompany extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        new CompanyService().deleteEntity(Company.class, Long.valueOf(command[2]));
+        Company company = new CompanyService().deleteEntity(Company.class, Long.valueOf(command[2]));
+        System.out.println("deleted company: " + company);
     }
 
     @Override

@@ -19,6 +19,6 @@ public interface BaseRepository <ID, E extends BaseEntity<ID>> {
 
     //void update(ID id, E e);
 
-    void deleteById(ID id);
+    E deleteById(ID id);
 
 }
