@@ -11,8 +11,8 @@ public class HandlerDeleteCustomer extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Customer customer = new CustomerService().deleteEntity(Customer.class, Long.valueOf(command[2]));
-        System.out.println("deleted customer: " + customer);
+        Customer customer = new CustomerService().deleteEntity(Customer.class, HandlerNumeric.getLong(command[2]));
+        System.out.println(customer==null ? "there is no customer with id "+ command[2] : "deleted customer: " + customer);
     }
 
     @Override

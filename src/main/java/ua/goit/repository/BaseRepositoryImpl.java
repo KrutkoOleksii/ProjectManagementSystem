@@ -126,8 +126,9 @@ public class BaseRepositoryImpl  <ID, E extends BaseEntity<ID>> implements Close
 
     @Override
     public E getOne(ID id) {
-        return findById(id)
-                .orElseThrow(()-> new RuntimeException("Entity with id " + id + " not found"));
+        Optional<E> e = findById(id);
+        if (e.isEmpty()) return null;
+        return findById(id).get();
     }
 
     @SneakyThrows

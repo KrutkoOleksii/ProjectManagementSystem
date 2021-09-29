@@ -11,8 +11,8 @@ public class HandlerReadCompany extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Company company = new CompanyService().readEntity(Company.class, Long.valueOf(command[2]));
-        System.out.println(company.toString());
+        Company company = new CompanyService().readEntity(Company.class, HandlerNumeric.getLong(command[2]));
+        System.out.println(company==null ? "there is no company with id "+ command[2] : company);
     }
 
     @Override

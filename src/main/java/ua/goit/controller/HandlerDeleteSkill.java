@@ -11,8 +11,8 @@ public class HandlerDeleteSkill extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Skill skill = new SkillService().deleteEntity(Skill.class, Long.valueOf(command[2]));
-        System.out.println("deleted skill: " + skill);
+        Skill skill = new SkillService().deleteEntity(Skill.class, HandlerNumeric.getLong(command[2]));
+        System.out.println(skill==null ? "there is no skill with id "+ command[2] : "deleted skill: " + skill);
     }
 
     @Override

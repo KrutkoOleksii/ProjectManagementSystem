@@ -15,7 +15,11 @@ public class HandlerUpdateDeveloper extends HandlerMenu{
     @Override
     protected void apply(String[] command) {
         Developer developer = new DeveloperService().readEntity(Developer.class, HandlerNumeric.getLong(command[2]));
-        System.out.println("Developer for update is:\n" + developer.toString());
+        if (developer==null) {
+            System.out.println("there is no developer with id "+command[2]);
+            return;
+        }
+        System.out.println("Developer for update is:\n" + developer);
         System.out.println("enter the new parameters of the developer:\n" +
                 "{name}|{gender}|{age}|{salary}|{companyId}");
         String[] split = scanner.next().split("\\|");
@@ -36,7 +40,7 @@ public class HandlerUpdateDeveloper extends HandlerMenu{
                 .salary(HandlerNumeric.getInteger(split[3]))
                 .companyId(companyId)
                 .build();
-        System.out.println("updated developer: " + new DeveloperService().updateEntity(Developer.class, updatedDeveloper).toString());
+        System.out.println("updated developer: " + new DeveloperService().updateEntity(Developer.class, updatedDeveloper));
     }
 
     @Override

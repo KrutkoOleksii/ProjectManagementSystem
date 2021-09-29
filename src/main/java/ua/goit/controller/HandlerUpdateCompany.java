@@ -11,7 +11,11 @@ public class HandlerUpdateCompany extends HandlerMenu{
     @Override
     protected void apply(String[] command) {
         Company company = new CompanyService().readEntity(Company.class, HandlerNumeric.getLong(command[2]));
-        System.out.println("Company for update is:\n" + company.toString());
+        if (company==null) {
+            System.out.println("there is no company with id "+command[2]);
+            return;
+        }
+        System.out.println("Company for update is:\n" + company);
         System.out.println("enter the new parameters of the company:\n" +
                 "{name}|{code}");
         String[] split = scanner.next().split("\\|");
@@ -24,7 +28,7 @@ public class HandlerUpdateCompany extends HandlerMenu{
                 .name(split[0])
                 .code(split[1])
                 .build();
-        System.out.println("updated company: " + new CompanyService().updateEntity(Company.class, updatedCompany).toString());
+        System.out.println("updated company: " + new CompanyService().updateEntity(Company.class, updatedCompany));
     }
 
     @Override

@@ -17,7 +17,11 @@ public class HandlerUpdateProject extends HandlerMenu{
     @Override
     protected void apply(String[] command) {
         Project project = new ProjectService().readEntity(Project.class, HandlerNumeric.getLong(command[2]));
-        System.out.println("Project for update is:\n" + project.toString());
+        if (project==null) {
+            System.out.println("there is no project with id "+command[2]);
+            return;
+        }
+        System.out.println("Project for update is:\n" + project);
         System.out.println("enter the new parameters of the project:\n" +
                 "{name}|{cost}|{startDate}|{companyId}|{customerId}");
         String[] split = scanner.next().split("\\|");
@@ -43,7 +47,7 @@ public class HandlerUpdateProject extends HandlerMenu{
                 .companyId(companyId)
                 .customerId(customerId)
                 .build();
-        System.out.println("updated project: " + new ProjectService().updateEntity(Project.class, updatedProject).toString());
+        System.out.println("updated project: " + new ProjectService().updateEntity(Project.class, updatedProject));
     }
 
     @Override

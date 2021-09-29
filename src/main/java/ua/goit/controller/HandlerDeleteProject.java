@@ -11,8 +11,8 @@ public class HandlerDeleteProject extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Project project = new ProjectService().deleteEntity(Project.class, Long.valueOf(command[2]));
-        System.out.println("deleted project: " + project);
+        Project project = new ProjectService().deleteEntity(Project.class, HandlerNumeric.getLong(command[2]));
+        System.out.println(project==null ? "there is no project with id "+ command[2] : "deleted project: " + project);
     }
 
     @Override

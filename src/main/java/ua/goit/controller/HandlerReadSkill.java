@@ -11,8 +11,8 @@ public class HandlerReadSkill extends HandlerMenu{
 
     @Override
     protected void apply(String[] command) {
-        Skill skill = new SkillService().readEntity(Skill.class, Long.valueOf(command[2]));
-        System.out.println(skill.toString());
+        Skill skill = new SkillService().readEntity(Skill.class, HandlerNumeric.getLong(command[2]));
+        System.out.println(skill==null ? "there is no skill with id "+ command[2] : skill);
     }
 
     @Override
