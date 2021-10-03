@@ -18,10 +18,10 @@ public class HandlerUpdateCompany extends HandlerMenu{
         System.out.println("Company for update is:\n" + company);
         System.out.println("enter the new parameters of the company:\n" +
                 "{name}|{code}");
-        String[] split = scanner.next().split("\\|");
+        String[] split = scanner.nextLine().split("\\|");
         while (split.length < 2) {
             System.out.println("Parameters is not enough. Enter correct number of parameters - 2");
-            split = scanner.next().split("\\|");
+            split = scanner.nextLine().split("\\|");
         }
         Company updatedCompany = Company.builder()
                 .id(HandlerNumeric.getLong(command[2]))

@@ -26,7 +26,7 @@ public class MenuConsoleController {
         while (!"exit".equals(response)) {
             if ("help".equalsIgnoreCase(response)){
                 System.out.println(helpString);
-                response = scanner.next();
+                response = scanner.nextLine();
                 continue;
             }
             String[] command = response.split("\\|");

@@ -24,10 +24,10 @@ public class HandlerCreateCustomer extends HandlerMenu{
         System.out.println("enter the parameters of the new customer:\n" +
                 "{name}|{code}\n" +
                 "( e.g.  FinTech|12345678");
-        String[] split = scanner.next().split("\\|");
+        String[] split = scanner.nextLine().split("\\|");
         while (split.length < 2) {
             System.out.println("Parameters is not enough. Enter correct number of parameters - 2");
-            split = scanner.next().split("\\|");
+            split = scanner.nextLine().split("\\|");
         }
         return Customer.builder()
                 .name(split[0])

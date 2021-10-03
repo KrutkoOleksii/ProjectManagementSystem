@@ -18,10 +18,10 @@ public class HandlerUpdateCustomer extends HandlerMenu{
         System.out.println("Customer for update is:\n" + customer);
         System.out.println("enter the new parameters of the customer:\n" +
                 "{name}|{code}");
-        String[] split = scanner.next().split("\\|");
+        String[] split = scanner.nextLine().split("\\|");
         while (split.length < 2) {
             System.out.println("Parameters is not enough. Enter correct number of parameters - 2");
-            split = scanner.next().split("\\|");
+            split = scanner.nextLine().split("\\|");
         }
         Customer updatedCustomer = Customer.builder()
                 .id(HandlerNumeric.getLong(command[2]))

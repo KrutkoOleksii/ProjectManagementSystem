@@ -24,10 +24,10 @@ public class HandlerCreateSkill extends HandlerMenu{
         System.out.println("enter the parameters of the new skill:\n" +
                 "{name}|{level}\n" +
                 "( e.g.  Pascal|Middle");
-        String[] split = scanner.next().split("\\|");
+        String[] split = scanner.nextLine().split("\\|");
         while (split.length < 2) {
             System.out.println("Parameters is not enough. Enter correct number of parameters - 2");
-            split = scanner.next().split("\\|");
+            split = scanner.nextLine().split("\\|");
         }
         return Skill.builder()
                 .name(split[0])
