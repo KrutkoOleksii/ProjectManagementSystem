@@ -23,6 +23,7 @@ public class MenuConsoleController {
                 "for EXIT:    exit";
         System.out.println(helpString);
         String response = scanner.next();
+        HandlerMenu handlerMenu = HandlerMenu.of();
         while (!"exit".equals(response)) {
             if ("help".equalsIgnoreCase(response)){
                 System.out.println(helpString);
@@ -30,7 +31,7 @@ public class MenuConsoleController {
                 continue;
             }
             String[] command = response.split("\\|");
-            HandlerMenu.of().handle(command);
+            handlerMenu.handle(command);
             response = scanner.next();
         }
     }
